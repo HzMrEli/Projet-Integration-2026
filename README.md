@@ -54,6 +54,9 @@ Chaque étape doit être courte et lue séparément, l’assistant attend un sig
 BONUS: si une étape contient “cuire 10 minutes”, l’assistant propose automatiquement un minuteur intégré (“je lance un minuteur de 10 minutes ?”).
 Possibilité de poser des questions contextuelles : “c’est quoi dorer ?”, “comment savoir si c’est cuit ?”.
 
+Diagramme :
+![Diagramme conversationnel](Diagramme_conversation.pdf "Diagramme conversationnel")
+
 
 
 Intentions:
