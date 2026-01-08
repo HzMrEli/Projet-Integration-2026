@@ -1,10 +1,9 @@
 # Projet-Integration-2026
 
 Idée: Assistant de cuisine
-Chabot recette oral (sans toucher le téléphone car mains sales), l'utilisateur donne les ingrédients qu'il a et le chat bot propose des recettes. 
+Chabot recette oral (sans toucher le téléphone car mains sales), l'utilisateur donne les ingrédients qu'il a et le chat bot propose des recettes.
 Il demande si il veut la recette en entier, ou suivre étape par étape avec l'utilisateur.
 Si étape par étape : le chatbot donne chaque étapes avec validation de l'utilisateur entre chaque étapes, pour continuer.
-
 
 **Tâche 1 – Collecte de la demande**
 Objectif : comprendre ce que l’utilisateur veut cuisiner, sans qu’il touche l’écran.
@@ -35,7 +34,6 @@ Si entrée par nom de recette :
 Vérifier les ingrédients nécessaires et annoncer ce qui manque.​
 Proposer éventuellement des substitutions simples (ex : crème → lait + beurre).
 
-
 Si manque d’ingrédients critique, possibilité d’énoncer une liste de courses vocale.​
 
 **Tâche 3 – Guidage pas-à-pas de la recette**
@@ -57,14 +55,27 @@ Possibilité de poser des questions contextuelles : “c’est quoi dorer ?”, 
 Diagramme :
 ![Diagramme conversationnel](Diagramme_conversation.pdf "Diagramme conversationnel")
 
-
-
 Intentions:
+
 - Intent “AlimentsFrigo” :
-    Slots : liste_ingredients, temps_max, difficulté (débutant / intermédiaire / avancé), type_plat (rapide, équilibré, dessert…), contraintes (végé, sans gluten…).
-​
+  Slots : liste_ingredients, temps_max, difficulté (débutant / intermédiaire / avancé), type_plat (rapide, équilibré, dessert…), contraintes (végé, sans gluten…).
+  ​
 - Intent “NomRecette” :
-    Slots : nom_recette, nb_personnes, temps_max, difficulté_souhaitée, niveau_cuistot (débutant, confirmé).
-​
+  Slots : nom_recette, nb_personnes, temps_max, difficulté_souhaitée, niveau_cuistot (débutant, confirmé).
+  ​
 - Intent “GuidageRecette” :
-    Slots : id_recette, étape_courante, minuteurs_actifs.
+  Slots : id_recette, étape_courante, minuteurs_actifs.
+
+**Tester:**
+
+- Faire un `uv sync` pour setup le .venv
+
+- Activer l'environnement: `.\.venv\Scripts\activate`
+
+- Train le model rasa avec: `rasa train`
+
+- Setup la clé API d'OpenAI avec : $env:OPENAI_API_KEY = "YOUR_KEY"
+
+- Lancer RASA dans un premier Terminal : `rasa run --enable-api`
+
+- Lancer streamlit (interface graphique) dans un deuxieme Terminal: `py -m streamlit run ui/streamlit_app.py`
