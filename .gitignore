@@ -7,3 +7,15 @@ __pycache__/
 # Virtual environments
 .venv/
 **/.venv/
+
+# models
+models/
+**/models/
+
+# Rasa
+.rasa/
+**/.rasa/
+
+# Sujet PDF
+PROJET_Intégration_Interaction_2025_2026_final.pdf
+**/PROJET_Intégration_Interaction_2025_2026_final.pdf

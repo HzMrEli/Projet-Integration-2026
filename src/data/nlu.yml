@@ -1,0 +1,140 @@
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - good morning
+    - good evening
+
+- intent: goodbye
+  examples: |
+    - bye
+    - goodbye
+    - see you later
+    - have a nice day
+
+- intent: affirm
+  examples: |
+    - yes
+    - yep
+    - yeah
+    - correct
+    - ok
+    - okay
+
+- intent: deny
+  examples: |
+    - no
+    - nope
+    - not really
+    - never
+
+- intent: start_fridge_mode
+  examples: |
+    - I want to cook with what I have
+    - what can I cook with my ingredients
+    - suggest recipes from my fridge
+    - use my fridge ingredients
+    - what can I make right now
+
+- intent: start_recipe_by_name
+  examples: |
+    - I want to cook carbonara
+    - I want to make pancakes
+    - recipe for lasagna
+    - show me the recipe for tomato soup
+    - I want to cook [omelette](recipe_name)
+    - recipe for [chicken curry](recipe_name)
+
+- intent: add_ingredient
+  examples: |
+    - I have eggs
+    - I have tomatoes and onions
+    - in my fridge I have chicken
+    - I also have rice
+    - I have [eggs](ingredient)
+    - add [butter](ingredient)
+    - [tomatoes](ingredient) and [onions](ingredient)
+
+- intent: done_ingredients
+  examples: |
+    - that's all
+    - I'm done
+    - no more
+    - nothing else
+    - finished
+    - that's everything
+
+- intent: choose_recipe
+  examples: |
+    - option 1
+    - option 2
+    - option 3
+    - the first one
+    - the second one
+    - the third one
+    - I choose option 2
+    - let's do carbonara
+
+- intent: ask_full_recipe
+  examples: |
+    - read the full recipe
+    - give me the whole recipe
+    - list all the steps
+    - show everything at once
+
+- intent: start_step_by_step
+  examples: |
+    - step by step
+    - guide me step by step
+    - one step at a time
+    - let's do it step by step
+
+- intent: next_step
+  examples: |
+    - next
+    - next step
+    - continue
+    - go on
+    - done
+    - ok next
+
+- intent: repeat_step
+  examples: |
+    - repeat
+    - say it again
+    - can you repeat
+    - repeat the step
+    - again please
+
+- intent: pause_recipe
+  examples: |
+    - pause
+    - wait
+    - hold on
+    - stop for a moment
+
+- intent: resume_recipe
+  examples: |
+    - resume
+    - continue now
+    - I'm back
+    - let's continue
+
+- intent: slow_down
+  examples: |
+    - slower
+    - speak slower
+    - more slowly please
+    - slow down
+
+- intent: ask_definition
+  examples: |
+    - what does "brown" mean
+    - what does "simmer" mean
+    - how do I know it's cooked
+    - what is dorer
+    - how to chop an onion

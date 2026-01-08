@@ -1,0 +1,15 @@
+version: "3.1"
+
+flows:
+  cook_from_fridge:
+    description: "Collect ingredients -> show mock recipes -> choose -> ask mode"
+    steps:
+      - action: utter_ask_ingredients_collect
+      - collect: ingredients
+      - action: utter_debug_slots
+
+      - action: utter_mock_recipes
+
+      - collect: selected_recipe_index
+
+      - action: utter_ask_full_or_step

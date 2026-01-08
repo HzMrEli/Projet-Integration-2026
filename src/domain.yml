@@ -1,0 +1,128 @@
+version: "3.1"
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+
+  - start_fridge_mode
+  - start_recipe_by_name
+
+  - add_ingredient
+  - done_ingredients
+  - choose_recipe
+
+  - ask_full_recipe
+  - start_step_by_step
+
+  - next_step
+  - repeat_step
+  - pause_recipe
+  - resume_recipe
+  - slow_down
+  - ask_definition
+
+entities:
+  - ingredient
+  - recipe_name
+
+slots:
+  ingredients:
+    type: text
+    influence_conversation: true
+
+  selected_recipe_index:
+    type: text
+    influence_conversation: true
+
+  time_max:
+    type: float
+    influence_conversation: true
+  nb_persons:
+    type: float
+    influence_conversation: true
+  difficulty:
+    type: text
+    influence_conversation: true
+
+  constraints:
+    type: list
+    influence_conversation: true
+    initial_value: []
+
+  candidate_recipes:
+    type: any
+    influence_conversation: false
+
+  recipe_steps:
+    type: any
+    influence_conversation: false
+  step_index:
+    type: float
+    influence_conversation: true
+    initial_value: 0
+  last_step_text:
+    type: text
+    influence_conversation: false
+
+  speech_rate:
+    type: text
+    influence_conversation: false
+    initial_value: "normal"
+
+
+responses:
+  utter_greet:
+    - text: "Hi! Do you want to cook with what you have, or search a recipe by name?"
+
+  utter_goodbye:
+    - text: "Bye! Enjoy your meal."
+
+  utter_ask_ingredients:
+    - text: "Tell me what you have in your fridge or pantry. Say 'that's all' when you're done."
+
+  utter_present_recipes:
+    - text: "I found 3 ideas. Say 'option 1', 'option 2', 'option 3', or the recipe name."
+
+  utter_ask_full_or_step:
+    - text: "Do you want the full recipe, or step-by-step guidance?"
+
+  utter_paused:
+    - text: "Okay, paused. Say 'resume' when you're ready."
+  utter_resumed:
+    - text: "Great, let's continue."
+  utter_slow_confirm:
+    - text: "Okay, I will speak more slowly."
+
+  utter_fallback:
+    - text: "Sorry, I didn’t catch that. You can say 'repeat', 'next step', or tell me your ingredients again."
+
+  utter_mock_recipes:
+    - text: |
+        I can suggest:
+        Option 1: Omelette (10 min, easy)
+        Option 2: Tomato pasta (20 min, easy)
+        Option 3: Fried rice (25 min, medium)
+
+
+  utter_ask_ingredients_collect:
+    - text: "List your ingredients now (one sentence). When finished, say: 'that's all'."
+
+  utter_ask_recipe_choice:
+    - text: "Which option do you choose? Say 'option 1', 'option 2', or 'option 3'."
+
+  utter_ask_selected_recipe_index:
+    - text: "Which option do you choose? Say 'option 1', 'option 2', or 'option 3'."
+ 
+  utter_debug_slots:
+    - text: "DEBUG -> ingredients='{ingredients}', choice='{selected_recipe_index}'"
+
+
+
+
+
