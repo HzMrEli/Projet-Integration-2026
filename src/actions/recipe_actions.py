@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Text
 
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.events import SlotSet
 
 from .openai_helpers import call_openai_json
 from .schemas import RECIPE_SCHEMA
@@ -100,3 +101,110 @@ class ActionGenerateRecipeFromName(Action):
             json_message=data,
         )
         return []
+
+class ActionTellRecipeStep(Action):
+    def name(self) -> Text:
+        return "action_tell_recipe_step"
+
+    def _extract_steps(self, tracker: Tracker) -> List[Dict[str, Any]]:
+        steps_slot = tracker.get_slot("recipe_steps")
+        if isinstance(steps_slot, list) and steps_slot:
+            return steps_slot
+
+        # Fallbacks: allow storing the full recipe card JSON in a slot.
+        for slot_name in ("recipe_card", "recipe_json", "last_recipe", "recipe"):
+            raw = tracker.get_slot(slot_name)
+            if raw is None:
+                continue
+
+            if isinstance(raw, dict):
+                data = raw
+            elif isinstance(raw, str):
+                try:
+                    data = json.loads(raw)
+                except Exception:
+                    continue
+            else:
+                continue
+
+            recipe = data.get("recipe") if isinstance(data, dict) else None
+            steps = recipe.get("steps") if isinstance(recipe, dict) else None
+            if isinstance(steps, list) and steps:
+                return steps
+
+        return []
+
+    def _get_int_slot(self, tracker: Tracker, slot_name: str, default: int = 0) -> int:
+        val = tracker.get_slot(slot_name)
+        if val is None:
+            return default
+        try:
+            # Rasa float slots often store numbers as float.
+            return int(float(val))
+        except Exception:
+            return default
+
+    def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+
+        steps = self._extract_steps(tracker)
+        if not steps:
+            dispatcher.utter_message(
+                text="Je n'ai pas encore de recette en mémoire. Demande d'abord une recette, puis dis 'étape par étape'."
+            )
+            return []
+
+        intent_name = (
+            (tracker.latest_message or {}).get("intent") or {}
+        ).get("name")
+
+        current_index = self._get_int_slot(tracker, "step_index", default=0)
+
+        if intent_name == "start_step_by_step":
+            idx = 0
+        elif intent_name == "repeat_step":
+            last_text = tracker.get_slot("last_step_text")
+            if isinstance(last_text, str) and last_text.strip():
+                dispatcher.utter_message(text=last_text)
+                return []
+            idx = max(current_index - 1, 0)
+        else:
+            idx = max(current_index, 0)
+
+        if idx >= len(steps):
+            dispatcher.utter_message(text="C'est terminé : tu as déjà fait toutes les étapes.")
+            return [SlotSet("step_index", float(len(steps)))]
+
+        step = steps[idx] if isinstance(steps[idx], dict) else {}
+        step_number = step.get("index")
+        instruction = step.get("instruction")
+        timer_min = step.get("timer_min")
+
+        if not isinstance(instruction, str) or not instruction.strip():
+            dispatcher.utter_message(text="Je n'arrive pas à lire cette étape. Dis 'suivant' pour passer à la prochaine.")
+            return [SlotSet("step_index", float(idx + 1))]
+
+        prefix = "Étape"
+        if isinstance(step_number, int):
+            text = f"{prefix} {step_number}: {instruction.strip()}"
+        else:
+            text = f"{prefix} {idx + 1}: {instruction.strip()}"
+
+        try:
+            timer_int = int(timer_min) if timer_min is not None else None
+        except Exception:
+            timer_int = None
+
+        if timer_int is not None and timer_int > 0:
+            text = f"{text} (environ {timer_int} min)"
+
+        dispatcher.utter_message(text=text)
+
+        return [
+            SlotSet("step_index", float(idx + 1)),
+            SlotSet("last_step_text", text),
+        ]
