@@ -3,10 +3,13 @@ from __future__ import annotations
 import hashlib
 import io
 import os
+import base64
 from typing import Any, Dict, List, Optional
 
 import requests
 import streamlit as st
+
+from ui.ptt_component import push_to_talk_audio
 
 
 def _env(name: str, default: str) -> str:
@@ -115,19 +118,23 @@ def main() -> None:
         with st.chat_message(role):
             st.markdown(content)
 
-    # Voice-only input (no manual text input).
-    if not hasattr(st, "audio_input"):
-        st.error(
-            "Cette version de Streamlit ne supporte pas st.audio_input. "
-            "Mets à jour Streamlit ou ajoute un composant micro (streamlit-webrtc)."
-        )
+    # Voice-only input with push-to-talk (hold SPACE).
+    ptt = push_to_talk_audio(key="ptt")
+    if ptt is None:
         return
 
-    audio = st.audio_input("Parle au chatbot (micro)")
-    if audio is None:
+    audio_b64 = ptt.get("audio_base64")
+    filename = str(ptt.get("filename") or "ptt.webm")
+    mime_type = str(ptt.get("mime_type") or "audio/webm")
+
+    if not isinstance(audio_b64, str) or not audio_b64:
         return
 
-    audio_bytes = audio.getvalue()
+    try:
+        audio_bytes = base64.b64decode(audio_b64)
+    except Exception:
+        return
+
     audio_hash = hashlib.sha256(audio_bytes).hexdigest()
     if st.session_state.get("last_audio_hash") == audio_hash:
         return
@@ -136,8 +143,6 @@ def main() -> None:
     with st.chat_message("user"):
         try:
             with st.spinner("Transcription…"):
-                filename = getattr(audio, "name", "audio.wav")
-                mime_type = getattr(audio, "type", "audio/wav")
                 user_text = _transcribe_with_openai(audio_bytes, filename=filename, mime_type=mime_type)
         except Exception as exc:
             st.error(f"Erreur STT: {exc}")

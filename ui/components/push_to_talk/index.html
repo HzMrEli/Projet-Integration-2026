@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Push-to-talk</title>
+    <style>
+      :root {
+        --bg: transparent;
+        --fg: #111;
+        --muted: #666;
+        --border: rgba(0,0,0,0.15);
+        --accent: #ff4b4b;
+      }
+      body {
+        margin: 0;
+        padding: 10px 12px;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+        color: var(--fg);
+        background: var(--bg);
+      }
+      .wrap {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .title {
+        font-weight: 600;
+        font-size: 14px;
+        color:#ff4b4b
+    }
+      .hint {
+        font-size: 12px;
+        color: #ffffff;
+        margin-top: 6px;
+      }
+      .status {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.25);
+        margin-right: 6px;
+        vertical-align: -1px;
+      }
+      .dot.rec {
+        background: var(--accent);
+        box-shadow: 0 0 0 3px rgba(255, 75, 75, 0.18);
+      }
+      .btn {
+        font-size: 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 6px 8px;
+        background: rgba(255,255,255,1.0);
+      }
+      .btn:disabled {
+        font-size: 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 6px 8px;
+        color: var(--fg);
+        background: rgb(88, 88, 88);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="row">
+        <div>
+          <div class="title">Push-to-talk</div>
+          <div class="hint">Maintiens <b>Espace</b> pour parler, relâche pour envoyer.</div>
+        </div>
+        <div class="status"><span id="dot" class="dot"></span><span id="label">prêt</span></div>
+      </div>
+      <div style="margin-top:10px" class="row">
+        <button id="enable" class="btn" type="button">Activer micro</button>
+        <span class="hint" id="perm"></span>
+      </div>
+    </div>
+
+    <script>
+      // Minimal Streamlit Component protocol (no external deps)
+      function postToStreamlit(type, data) {
+        const message = Object.assign({
+          isStreamlitMessage: true,
+          type: type,
+        }, data || {});
+        window.parent.postMessage(message, "*");
+      }
+
+      function setComponentValue(value) {
+        postToStreamlit("streamlit:setComponentValue", { value: value });
+      }
+
+      function setFrameHeight() {
+        const height = document.documentElement.scrollHeight;
+        postToStreamlit("streamlit:setFrameHeight", { height: height });
+      }
+
+      // Signal ready
+      postToStreamlit("streamlit:componentReady", { apiVersion: 1 });
+      setFrameHeight();
+
+      // Optional: react to theme changes / rerenders
+      window.addEventListener("message", (event) => {
+        const data = event.data;
+        if (!data || data.type !== "streamlit:render") return;
+        // Keep height correct on rerender.
+        setFrameHeight();
+      });
+
+      // Push-to-talk implementation
+      const dot = document.getElementById("dot");
+      const label = document.getElementById("label");
+      const enableBtn = document.getElementById("enable");
+      const perm = document.getElementById("perm");
+
+      let stream = null;
+      let recorder = null;
+      let chunks = [];
+      let isRecording = false;
+      let micEnabled = false;
+
+      function setStatus(text, recording) {
+        label.textContent = text;
+        if (recording) dot.classList.add("rec");
+        else dot.classList.remove("rec");
+        setFrameHeight();
+      }
+
+      async function enableMic() {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          micEnabled = true;
+          perm.textContent = "micro OK";
+          enableBtn.disabled = true;
+          setStatus("prêt", false);
+        } catch (e) {
+          micEnabled = false;
+          perm.textContent = "autorisation micro refusée";
+          setStatus("micro bloqué", false);
+        }
+      }
+
+      function pickMimeType() {
+        const candidates = [
+          "audio/webm;codecs=opus",
+          "audio/webm",
+          "audio/ogg;codecs=opus",
+          "audio/ogg",
+        ];
+        for (const t of candidates) {
+          if (window.MediaRecorder && MediaRecorder.isTypeSupported(t)) return t;
+        }
+        return "";
+      }
+
+      function startRecording() {
+        if (!micEnabled || !stream || isRecording) return;
+        chunks = [];
+
+        const mimeType = pickMimeType();
+        try {
+          recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+        } catch (e) {
+          setStatus("MediaRecorder indisponible", false);
+          return;
+        }
+
+        recorder.ondataavailable = (evt) => {
+          if (evt.data && evt.data.size > 0) chunks.push(evt.data);
+        };
+
+        recorder.onstop = async () => {
+          isRecording = false;
+          setStatus("transfert…", false);
+
+          try {
+            const blob = new Blob(chunks, { type: recorder.mimeType || "audio/webm" });
+            const arrayBuf = await blob.arrayBuffer();
+            const bytes = new Uint8Array(arrayBuf);
+
+            // base64 encode
+            let binary = "";
+            for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+            const audioBase64 = btoa(binary);
+
+            const mime = blob.type || "audio/webm";
+            const ext = mime.includes("ogg") ? "ogg" : "webm";
+            setComponentValue({
+              audio_base64: audioBase64,
+              mime_type: mime,
+              filename: `ptt.${ext}`,
+            });
+
+            setStatus("envoyé", false);
+            setTimeout(() => setStatus("prêt", false), 700);
+          } catch (e) {
+            setStatus("erreur transfert", false);
+          }
+        };
+
+        isRecording = true;
+        setStatus("enregistrement", true);
+        try {
+          recorder.start();
+        } catch (e) {
+          isRecording = false;
+          setStatus("erreur start", false);
+        }
+      }
+
+      function stopRecording() {
+        if (!recorder || !isRecording) return;
+        setStatus("stop…", false);
+        try {
+          recorder.stop();
+        } catch (e) {
+          isRecording = false;
+          setStatus("erreur stop", false);
+        }
+      }
+
+      enableBtn.addEventListener("click", () => enableMic());
+
+      // Space bar hold-to-talk
+      window.addEventListener("keydown", (e) => {
+        if (e.code !== "Space") return;
+        // Avoid scrolling the page
+        e.preventDefault();
+        if (!micEnabled) return;
+        startRecording();
+      }, { passive: false });
+
+      window.addEventListener("keyup", (e) => {
+        if (e.code !== "Space") return;
+        e.preventDefault();
+        stopRecording();
+      }, { passive: false });
+
+      setStatus("prêt", false);
+    </script>
+  </body>
+</html>

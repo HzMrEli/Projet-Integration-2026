@@ -3,7 +3,7 @@ name = "projet-integration-2026"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.11,<3.12"
+requi²-python = ">=3.11,<3.12"
 dependencies = [
 	"openai>=1.0.0",
 	"rasa-sdk>=3.0.0",
