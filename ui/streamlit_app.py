@@ -112,16 +112,16 @@ def main() -> None:
         if isinstance(tts_last_file, str) and tts_last_file:
             st.code(tts_last_file)
 
+    # Voice-only input with push-to-talk (hold SPACE).
+    ptt = push_to_talk_audio(key="ptt")
+    if ptt is None:
+        return
+
     for m in st.session_state["messages"]:
         role = m.get("role", "assistant")
         content = m.get("content", "")
         with st.chat_message(role):
             st.markdown(content)
-
-    # Voice-only input with push-to-talk (hold SPACE).
-    ptt = push_to_talk_audio(key="ptt")
-    if ptt is None:
-        return
 
     audio_b64 = ptt.get("audio_base64")
     filename = str(ptt.get("filename") or "ptt.webm")
