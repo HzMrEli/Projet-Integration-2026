@@ -1,4 +1,4 @@
-version: "3.1"
+version: "2.0"
 
 session_config:
   session_expiration_time: 60
@@ -33,35 +33,24 @@ entities:
 
 slots:
   ingredients:
-    type: text
-    influence_conversation: true
-
-  selected_recipe_index:
-    type: text
-    influence_conversation: true
-
-  time_max:
-    type: float
-    influence_conversation: true
-  nb_persons:
-    type: float
-    influence_conversation: true
-  difficulty:
-    type: text
-    influence_conversation: true
-
-  constraints:
     type: list
     influence_conversation: true
     initial_value: []
-
+  selected_recipe_index:
+    type: text
+    influence_conversation: true
   candidate_recipes:
-    type: any
+    type: list
     influence_conversation: false
+    initial_value: []
 
+  recipe_name:
+    type: text
+    influence_conversation: true
   recipe_steps:
-    type: any
+    type: list
     influence_conversation: false
+    initial_value: []
   step_index:
     type: float
     influence_conversation: true
@@ -75,54 +64,56 @@ slots:
     influence_conversation: false
     initial_value: "normal"
 
-
 responses:
   utter_greet:
-    - text: "Hi! Do you want to cook with what you have, or search a recipe by name?"
+    - text: "Bonjour ! Je suis votre assistant culinaire. Que voulez-vous cuisiner ?"
 
   utter_goodbye:
-    - text: "Bye! Enjoy your meal."
+    - text: "Au revoir ! Bon appétit !"
 
   utter_ask_ingredients:
-    - text: "Tell me what you have in your fridge or pantry. Say 'that's all' when you're done."
-
-  utter_present_recipes:
-    - text: "I found 3 ideas. Say 'option 1', 'option 2', 'option 3', or the recipe name."
-
-  utter_ask_full_or_step:
-    - text: "Do you want the full recipe, or step-by-step guidance?"
-
-  utter_paused:
-    - text: "Okay, paused. Say 'resume' when you're ready."
-  utter_resumed:
-    - text: "Great, let's continue."
-  utter_slow_confirm:
-    - text: "Okay, I will speak more slowly."
-
-  utter_fallback:
-    - text: "Sorry, I didn’t catch that. You can say 'repeat', 'next step', or tell me your ingredients again."
-
-  utter_mock_recipes:
-    - text: |
-        I can suggest:
-        Option 1: Omelette (10 min, easy)
-        Option 2: Tomato pasta (20 min, easy)
-        Option 3: Fried rice (25 min, medium)
-
+    - text: "Quels ingrédients avez-vous dans votre frigo ?"
 
   utter_ask_ingredients_collect:
-    - text: "List your ingredients now (one sentence). When finished, say: 'that's all'."
+    - text: "Listez vos ingrédients (une phrase). Quand vous avez terminé, dites : 'c'est tout'."
+
+  utter_confirm_ingredients:
+    - text: "Très bien, j'ai noté vos ingrédients : {ingredients}. Souhaitez-vous que je cherche des recettes ?"
+
+  utter_present_recipes:
+    - text: "J'ai trouvé ces idées :\n1) {option1}\n2) {option2}\n3) {option3}\nDites 'option 1', 'option 2', 'option 3' ou le nom de la recette."
 
   utter_ask_recipe_choice:
-    - text: "Which option do you choose? Say 'option 1', 'option 2', or 'option 3'."
+    - text: "Quelle option choisissez-vous ? Dites 'option 1', 'option 2', ou 'option 3'."
 
-  utter_ask_selected_recipe_index:
-    - text: "Which option do you choose? Say 'option 1', 'option 2', or 'option 3'."
- 
-  utter_debug_slots:
-    - text: "DEBUG -> ingredients='{ingredients}', choice='{selected_recipe_index}'"
+  utter_ask_full_or_step:
+    - text: "Voulez-vous la recette complète, ou un guidage étape par étape ?"
 
+  utter_ask_next:
+    - text: "Prêt pour l'étape suivante ? Dites 'suivant' ou 'répète'."
 
+  utter_paused:
+    - text: "D'accord, en pause. Dites 'reprends' quand vous êtes prêt."
 
+  utter_resumed:
+    - text: "Parfait, continuons."
 
+  utter_slow_confirm:
+    - text: "D'accord, je vais parler plus lentement."
 
+  utter_ask_definition:
+    - text: "Quel terme voulez-vous que j'explique ?"
+
+  utter_fallback:
+    - text: "Désolé, je n'ai pas compris. Vous pouvez répéter ou demander 'aide'."
+
+actions:
+  - action_detect_language
+  - action_generate_recipe_suggestions
+  - action_collect_ingredients
+  - action_show_full_recipe
+  - action_start_step_by_step
+  - action_read_step
+  - action_next_step
+  - action_repeat_step
+  - action_explain_term

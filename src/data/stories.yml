@@ -1,0 +1,74 @@
+version: "2.0"
+
+stories:
+  - story: frigo -> collecte ingrédients -> suggestions -> pas à pas
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: start_fridge_mode
+      - action: utter_ask_ingredients_collect
+      - intent: add_ingredient
+      - action: action_collect_ingredients
+      - intent: add_ingredient
+      - intent: done_ingredients
+      - action: action_generate_recipe_suggestions
+      - action: utter_present_recipes
+      - intent: choose_recipe
+      - action: utter_ask_full_or_step
+
+  - story: utilisateur donne directement des ingrédients -> suggestions
+    steps:
+      - intent: add_ingredient
+      - action: action_collect_ingredients
+      - intent: add_ingredient
+      - intent: done_ingredients
+      - action: action_generate_recipe_suggestions
+      - action: utter_present_recipes
+      - intent: start_step_by_step
+      - action: action_start_step_by_step
+      - action: action_read_step
+      - intent: next_step
+      - action: action_read_step
+      - intent: next_step
+      - action: action_read_step
+      - intent: goodbye
+      - action: utter_goodbye
+
+  - story: recette par nom -> affiche complète
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: start_recipe_by_name
+      - slot_was_set:
+          - recipe_name: "crêpes"
+      - action: utter_ask_full_or_step
+      - intent: ask_full_recipe
+      - action: action_show_full_recipe
+      - intent: goodbye
+      - action: utter_goodbye
+
+  - story: guidage étape par étape avec définition et ralentir
+    steps:
+      - intent: start_step_by_step
+      - action: action_start_step_by_step
+      - action: action_read_step
+      - intent: ask_definition
+      - action: action_explain_term
+      - intent: next_step
+      - action: action_read_step
+      - intent: slow_down
+      - action: utter_slow_confirm
+      - action: action_repeat_step
+      - intent: next_step
+      - action: action_read_step
+
+  - story: pause et reprise durant le guidage
+    steps:
+      - intent: start_step_by_step
+      - action: action_start_step_by_step
+      - action: action_read_step
+      - intent: pause_recipe
+      - action: utter_paused
+      - intent: resume_recipe
+      - action: utter_resumed
+      - action: action_read_step

@@ -70,7 +70,7 @@ Intentions:
 
 - Faire un `uv sync` pour setup le .venv
 
-- Activer l'environnement: `.\.venv\Scripts\activate`
+- Aller dans /src et Activer l'environnement: `.venv\Scripts\activate` pour être dans le bon .venv (src)
 
 - Train le model rasa avec: `rasa train`
 
@@ -78,4 +78,4 @@ Intentions:
 
 - Lancer RASA dans un premier Terminal : `rasa run --enable-api`
 
-- Lancer streamlit (interface graphique) dans un deuxieme Terminal: `py -m streamlit run ui/streamlit_app.py`
+- Lancer streamlit (interface graphique) dans un powershell : `py -m streamlit run ui/streamlit_app.py`
