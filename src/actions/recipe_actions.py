@@ -50,7 +50,18 @@ class ActionGenerateRecipeFromIngredients(Action):
             text=json.dumps(data, ensure_ascii=False),
             json_message=data,
         )
-        return []
+        recipe = data.get("recipe") if isinstance(data, dict) else None
+        steps = recipe.get("steps") if isinstance(recipe, dict) else None
+        if not isinstance(steps, list):
+            steps = []
+
+        return [
+            SlotSet("recipe_card", data),
+            SlotSet("recipe_json", json.dumps(data, ensure_ascii=False)),
+            SlotSet("recipe_steps", steps),
+            SlotSet("step_index", 0.0),
+            SlotSet("last_step_text", None),
+        ]
 
 
 class ActionGenerateRecipeFromName(Action):
@@ -100,7 +111,18 @@ class ActionGenerateRecipeFromName(Action):
             text=json.dumps(data, ensure_ascii=False),
             json_message=data,
         )
-        return []
+        recipe = data.get("recipe") if isinstance(data, dict) else None
+        steps = recipe.get("steps") if isinstance(recipe, dict) else None
+        if not isinstance(steps, list):
+            steps = []
+
+        return [
+            SlotSet("recipe_card", data),
+            SlotSet("recipe_json", json.dumps(data, ensure_ascii=False)),
+            SlotSet("recipe_steps", steps),
+            SlotSet("step_index", 0.0),
+            SlotSet("last_step_text", None),
+        ]
 
 class ActionTellRecipeStep(Action):
     def name(self) -> Text:
