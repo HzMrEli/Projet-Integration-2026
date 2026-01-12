@@ -8,6 +8,16 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 
+def _get_float_env(name: str, default: float) -> float:
+    raw = os.getenv(name)
+    if raw is None or not str(raw).strip():
+        return default
+    try:
+        return float(raw)
+    except Exception:
+        return default
+
+
 def call_openai_json(prompt: str, schema: Dict[str, Any]) -> Dict[str, Any]:
     """Appel OpenAI qui retourne un dict JSON (robuste).
 
@@ -35,6 +45,10 @@ def call_openai_json(prompt: str, schema: Dict[str, Any]) -> Dict[str, Any]:
     # IMPORTANT: choose a model that exists for your account (ex: gpt-4o-mini, gpt-4o, gpt-3.5-turbo).
     model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
+    # Keep actions responsive: if OpenAI hangs, Rasa shell can time out waiting.
+    # You can tune this with OPENAI_REQUEST_TIMEOUT (seconds).
+    request_timeout = _get_float_env("OPENAI_REQUEST_TIMEOUT", 45.0)
+
     openai.api_key = api_key
 
     system = (
@@ -54,14 +68,26 @@ def call_openai_json(prompt: str, schema: Dict[str, Any]) -> Dict[str, Any]:
     )
 
     text: Optional[str] = None
-    resp = openai.ChatCompletion.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": system + json_only_instructions},
-            {"role": "user", "content": prompt},
-        ],
-        temperature=0.2,
-    )
+
+    try:
+        resp = openai.ChatCompletion.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": system + json_only_instructions},
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0.2,
+            request_timeout=request_timeout,
+        )
+    except Exception as exc:
+        # openai==0.28.1 exposes typed exceptions under openai.error; keep this defensive.
+        err_name = exc.__class__.__name__
+        msg = str(exc)
+        if "timeout" in err_name.lower() or "timeout" in msg.lower():
+            raise RuntimeError(
+                f"L'appel OpenAI a expiré après ~{int(request_timeout)}s. Réessaie, ou augmente OPENAI_REQUEST_TIMEOUT."
+            ) from exc
+        raise RuntimeError(f"Erreur OpenAI: {msg}") from exc
 
     try:
         text = resp["choices"][0]["message"]["content"]

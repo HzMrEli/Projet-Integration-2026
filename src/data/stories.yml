@@ -11,6 +11,7 @@ stories:
       - action: utter_confirm_ingredients
       - intent: done_ingredients
       - action: action_generate_recipe_from_ingredients
+      - action: utter_ask_validate_recipe
 
   - story: utilisateur donne directement des ingrédients -> génération recette
     steps:
@@ -18,6 +19,92 @@ stories:
       - action: utter_confirm_ingredients
       - intent: done_ingredients
       - action: action_generate_recipe_from_ingredients
+      - action: utter_ask_validate_recipe
+
+  - story: ingrédients -> recette ok -> étape par étape -> prêt -> étapes 1 par 1
+    steps:
+      - intent: start_fridge_mode
+      - action: utter_ask_ingredients_collect
+      - intent: add_ingredient
+      - action: utter_confirm_ingredients
+      - intent: add_ingredient
+      - action: utter_confirm_ingredients
+      - intent: done_ingredients
+      - action: action_generate_recipe_from_ingredients
+      - action: utter_ask_validate_recipe
+      - intent: affirm
+      - action: utter_ask_full_or_step
+      - intent: start_step_by_step
+      - action: utter_ask_ready_to_start
+      - intent: affirm
+      - action: action_tell_recipe_step
+      - intent: next_step
+      - action: action_tell_recipe_step
+      - intent: next_step
+      - action: action_tell_recipe_step
+
+  - story: ingrédients -> recette refusée -> autre recette -> validation
+    steps:
+      - intent: start_fridge_mode
+      - action: utter_ask_ingredients_collect
+      - intent: add_ingredient
+      - action: utter_confirm_ingredients
+      - intent: done_ingredients
+      - action: action_generate_recipe_from_ingredients
+      - action: utter_ask_validate_recipe
+      - intent: deny
+      - action: utter_propose_another_recipe
+      - action: action_generate_recipe_from_ingredients
+      - action: utter_ask_validate_recipe
+      - intent: affirm
+      - action: utter_ask_full_or_step
+
+  - story: ingrédients -> recette choisie via option -> étape par étape
+    steps:
+      - intent: add_ingredient
+      - action: utter_confirm_ingredients
+      - intent: done_ingredients
+      - action: action_generate_recipe_from_ingredients
+      - action: utter_ask_validate_recipe
+      - intent: choose_recipe
+      - action: utter_ask_full_or_step
+      - intent: start_step_by_step
+      - action: utter_ask_ready_to_start
+      - intent: affirm
+      - action: action_tell_recipe_step
+
+  - story: étape par étape -> pas prêt -> attendre -> prêt -> première étape
+    steps:
+      - intent: start_step_by_step
+      - action: utter_ask_ready_to_start
+      - intent: deny
+      - action: utter_waiting_ready
+      - intent: affirm
+      - action: action_tell_recipe_step
+
+  - story: étape par étape -> répéter -> suivant
+    steps:
+      - intent: start_step_by_step
+      - action: utter_ask_ready_to_start
+      - intent: affirm
+      - action: action_tell_recipe_step
+      - intent: repeat_step
+      - action: action_tell_recipe_step
+      - intent: next_step
+      - action: action_tell_recipe_step
+
+  - story: étape par étape -> pause -> reprise -> continuer
+    steps:
+      - intent: start_step_by_step
+      - action: utter_ask_ready_to_start
+      - intent: affirm
+      - action: action_tell_recipe_step
+      - intent: pause_recipe
+      - action: utter_paused
+      - intent: resume_recipe
+      - action: utter_resumed
+      - intent: next_step
+      - action: action_tell_recipe_step
 
   - story: recette par nom -> génération recette
     steps:
@@ -25,10 +112,25 @@ stories:
       - action: utter_greet
       - intent: start_recipe_by_name
       - action: action_generate_recipe_from_name
+      - action: utter_ask_validate_recipe
+
+  - story: recette par nom -> valide -> étape par étape
+    steps:
+      - intent: start_recipe_by_name
+      - action: action_generate_recipe_from_name
+      - action: utter_ask_validate_recipe
+      - intent: affirm
+      - action: utter_ask_full_or_step
+      - intent: start_step_by_step
+      - action: utter_ask_ready_to_start
+      - intent: affirm
+      - action: action_tell_recipe_step
 
   - story: guidage étape par étape
     steps:
       - intent: start_step_by_step
+      - action: utter_ask_ready_to_start
+      - intent: affirm
       - action: action_tell_recipe_step
       - intent: next_step
       - action: action_tell_recipe_step

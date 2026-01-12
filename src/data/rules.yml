@@ -15,8 +15,10 @@ rules:
     steps:
       - intent: done_ingredients
       - action: action_generate_recipe_from_ingredients
+      - action: utter_ask_validate_recipe
 
   - rule: Generate recipe after recipe by name
     steps:
       - intent: start_recipe_by_name
       - action: action_generate_recipe_from_name
+      - action: utter_ask_validate_recipe
