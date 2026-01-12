@@ -28,25 +28,46 @@ intents:
   - ask_definition
 
 entities:
-  - ingredient
-  - recipe_name
+  - liste_ingredients
+  - nom_recette
 
 slots:
-  ingredients:
+  # --- Slots attendus par src/actions/recipe_actions.py ---
+  liste_ingredients:
     type: list
     influence_conversation: true
-    initial_value: []
-  selected_recipe_index:
-    type: text
-    influence_conversation: true
-  candidate_recipes:
-    type: list
-    influence_conversation: false
-    initial_value: []
+    auto_fill: true
 
-  recipe_name:
+  nom_recette:
     type: text
     influence_conversation: true
+    auto_fill: true
+
+  contraintes:
+    type: text
+    influence_conversation: true
+
+  temps_max:
+    type: float
+    influence_conversation: true
+
+  nb_personnes:
+    type: float
+    influence_conversation: true
+
+  difficulte:
+    type: text
+    influence_conversation: true
+
+  # --- Slots utilisés par ActionTellRecipeStep ---
+  recipe_card:
+    type: any
+    influence_conversation: false
+
+  recipe_json:
+    type: any
+    influence_conversation: false
+
   recipe_steps:
     type: list
     influence_conversation: false
@@ -78,13 +99,7 @@ responses:
     - text: "Listez vos ingrédients (une phrase). Quand vous avez terminé, dites : 'c'est tout'."
 
   utter_confirm_ingredients:
-    - text: "Très bien, j'ai noté vos ingrédients : {ingredients}. Souhaitez-vous que je cherche des recettes ?"
-
-  utter_present_recipes:
-    - text: "J'ai trouvé ces idées :\n1) {option1}\n2) {option2}\n3) {option3}\nDites 'option 1', 'option 2', 'option 3' ou le nom de la recette."
-
-  utter_ask_recipe_choice:
-    - text: "Quelle option choisissez-vous ? Dites 'option 1', 'option 2', ou 'option 3'."
+    - text: "Très bien, j'ai noté : {liste_ingredients}. Quand vous avez terminé, dites : 'c'est tout'."
 
   utter_ask_full_or_step:
     - text: "Voulez-vous la recette complète, ou un guidage étape par étape ?"
@@ -108,12 +123,8 @@ responses:
     - text: "Désolé, je n'ai pas compris. Vous pouvez répéter ou demander 'aide'."
 
 actions:
-  - action_detect_language
-  - action_generate_recipe_suggestions
-  - action_collect_ingredients
-  - action_show_full_recipe
-  - action_start_step_by_step
-  - action_read_step
-  - action_next_step
-  - action_repeat_step
-  - action_explain_term
+  - action_generate_recipe_from_ingredients
+  - action_generate_recipe_from_name
+  - action_tell_recipe_step
+  - action_text_to_speech
+  - action_ui_refresh_pronounce_phrase

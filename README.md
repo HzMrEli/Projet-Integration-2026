@@ -78,4 +78,10 @@ Intentions:
 
 - Lancer RASA dans un premier Terminal : `rasa run --enable-api`
 
+- Lancer le serveur d'actions dans un autre Terminal : `rasa run actions`
+
+- Si tu ne lances pas depuis le dossier `src`, passe le fichier endpoints :
+  - depuis la racine du repo : `rasa run --enable-api --endpoints src/endpoints.yml`
+  - depuis `src` : `rasa run --enable-api --endpoints endpoints.yml`
+
 - Lancer streamlit (interface graphique) dans un powershell : `py -m streamlit run ui/streamlit_app.py`

@@ -46,18 +46,319 @@ nlu:
       - je veux faire des crêpes
       - recette de lasagnes
       - montre-moi la recette de soupe à la tomate
-      - je veux cuisiner une [omelette](recipe_name)
-      - recette de [poulet au curry](recipe_name)
+      - je veux cuisiner une [omelette](nom_recette)
+      - recette de [poulet au curry](nom_recette)
+      - j'aimerais faire des [spaghetti bolognaise](nom_recette)
+      - comment faire des [ratatouilles](nom_recette)
+      - donne-moi la recette des [crêpes](nom_recette)
 
   - intent: add_ingredient
     examples: |
-      - j'ai des œufs
-      - j'ai des tomates et des oignons
-      - dans mon frigo j'ai du poulet
-      - j'ai aussi du riz
-      - j'ai des [œufs](ingredient)
-      - ajoute du [beurre](ingredient)
-      - des [tomates](ingredient) et des [oignons](ingredient)
+      - j'ai [des œufs, du lait, de la farine, du beurre, du sucre et des pommes](liste_ingredients)
+      - j'ai des [œufs](liste_ingredients)
+      - j'ai des [oeufs](liste_ingredients)
+      - j'ai des [œufs](liste_ingredients) et du [lait](liste_ingredients)
+      - j'ai des [oeufs](liste_ingredients) et du [lait](liste_ingredients)
+      - des [tomates](liste_ingredients) et des [oignons](liste_ingredients)
+      - j'ai du [poulet](liste_ingredients), du [riz](liste_ingredients) et des [carottes](liste_ingredients)
+      - dans mon frigo j'ai du [thon](liste_ingredients) et des [pâtes](liste_ingredients)
+      - ajoute des [œufs](liste_ingredients)
+      - ajoute du [lait](liste_ingredients)
+      - ajoute de la [farine](liste_ingredients)
+      - mets du [beurre](liste_ingredients)
+      - mets du [sucre](liste_ingredients)
+      - je dispose de [tomates](liste_ingredients)
+      - j'ai des [tomates](liste_ingredients)
+      - j'ai des [oignons](liste_ingredients)
+      - j'ai de l'[ail](liste_ingredients)
+      - j'ai un [oignon](liste_ingredients) et de l'[ail](liste_ingredients)
+      - j'ai de l'[huile d'olive](liste_ingredients)
+      - j'ai du [riz](liste_ingredients)
+      - j'ai des [pâtes](liste_ingredients)
+      - j'ai des [pates](liste_ingredients)
+      - je viens d'acheter du [parmesan](liste_ingredients)
+      - je viens d'acheter de la [mozzarella](liste_ingredients)
+      - dans le frigo il me reste du [jambon](liste_ingredients)
+      - il me reste des [lardons](liste_ingredients)
+      - dans mon placard j'ai des [lentilles](liste_ingredients)
+      - j'ai des [pois chiches](liste_ingredients)
+      - j'ai des [haricots rouges](liste_ingredients)
+      - j'ai des [petits pois](liste_ingredients)
+      - j'ai du [maïs](liste_ingredients)
+      - j'ai du [mais](liste_ingredients)
+      - j'ai une [crème fraîche](liste_ingredients)
+      - j'ai de la [crème](liste_ingredients)
+      - j'ai du [fromage](liste_ingredients)
+      - j'ai de l'[emmental](liste_ingredients)
+      - j'ai de la [feta](liste_ingredients)
+      - j'ai du [chèvre](liste_ingredients)
+      - j'ai du [saumon](liste_ingredients)
+      - j'ai des [crevettes](liste_ingredients)
+      - j'ai des [sardines](liste_ingredients)
+      - j'ai du [tofu](liste_ingredients)
+      - j'ai des [pommes de terre](liste_ingredients)
+      - j'ai une [pomme de terre](liste_ingredients)
+      - il me reste une [patate douce](liste_ingredients)
+      - j'ai des [carottes](liste_ingredients) et des [pommes de terre](liste_ingredients)
+      - j'ai une [courgette](liste_ingredients) et une [aubergine](liste_ingredients)
+      - j'ai des [champignons](liste_ingredients)
+      - j'ai des [épinards](liste_ingredients)
+      - j'ai des [epinards](liste_ingredients)
+      - j'ai du [brocoli](liste_ingredients)
+      - j'ai du [chou-fleur](liste_ingredients)
+      - j'ai un [avocat](liste_ingredients)
+      - j'ai un [citron](liste_ingredients)
+      - j'ai du [pain](liste_ingredients)
+      - j'ai une [baguette](liste_ingredients)
+      - j'ai de la [chapelure](liste_ingredients)
+      - j'ai aussi du [sel](liste_ingredients) et du [poivre](liste_ingredients)
+      - j'ai du [curry](liste_ingredients) et du [cumin](liste_ingredients)
+      - j'ai du [paprika](liste_ingredients)
+      - j'ai du [piment](liste_ingredients)
+      - j'ai du [basilic](liste_ingredients) et du [persil](liste_ingredients)
+      - j'ai de la [menthe](liste_ingredients)
+      - j'ai de la [moutarde](liste_ingredients)
+      - j'ai de la [sauce tomate](liste_ingredients)
+      - j'ai du [concentré de tomate](liste_ingredients)
+      - j'ai du [pesto](liste_ingredients)
+      - j'ai du [bouillon de légumes](liste_ingredients)
+      - j'ai du [bouillon de poulet](liste_ingredients)
+      - dans le frigo : [œufs](liste_ingredients), [lait](liste_ingredients), [beurre](liste_ingredients)
+      - ingrédients disponibles : [thon](liste_ingredients) / [pâtes](liste_ingredients) / [tomates](liste_ingredients)
+      - j'ai [tomates](liste_ingredients) + [oignons](liste_ingredients) + [ail](liste_ingredients)
+      - j'ai du [poulet](liste_ingredients) et des [spaghetti](liste_ingredients)
+      - j'ai des [coquillettes](liste_ingredients)
+      - j'ai des [nouilles](liste_ingredients)
+      - j'ai de la [semoule](liste_ingredients)
+      - j'ai du [couscous](liste_ingredients)
+      - j'ai du [quinoa](liste_ingredients)
+      - j'ai du [boulgour](liste_ingredients)
+      - il me reste [2 œufs](liste_ingredients)
+      - il me reste [3 oeufs](liste_ingredients)
+      - j'ai [1 litre de lait](liste_ingredients)
+      - j'ai une brique de [lait](liste_ingredients)
+      - j'ai un peu de [beurre](liste_ingredients)
+      - j'ai un sachet de [farine](liste_ingredients)
+      - j'ai [sucre](liste_ingredients) + [farine](liste_ingredients) + [œufs](liste_ingredients)
+      - j'ai [huile](liste_ingredients), [vinaigre](liste_ingredients) et [moutarde](liste_ingredients)
+      - j'ai [huile d'olive](liste_ingredients) et [vinaigre balsamique](liste_ingredients)
+      - j'ai des [olives](liste_ingredients)
+      - j'ai de la [sauce soja](liste_ingredients)
+      - j'ai du [ketchup](liste_ingredients)
+      - j'ai de la [mayonnaise](liste_ingredients)
+      - j'ai du [bacon](liste_ingredients)
+      - j'ai de la [dinde](liste_ingredients)
+      - j'ai du [bœuf](liste_ingredients)
+      - j'ai du [boeuf](liste_ingredients)
+      - j'ai du [porc](liste_ingredients)
+      - j'ai une [saucisse](liste_ingredients)
+      - j'ai des [steak](liste_ingredients)
+      - j'ai du [tofu](liste_ingredients) et des [pois chiches](liste_ingredients)
+      - j'ai [lentilles](liste_ingredients), [haricots blancs](liste_ingredients) et [haricots rouges](liste_ingredients)
+      - il me reste une [échalote](liste_ingredients)
+      - il me reste une [echalote](liste_ingredients)
+      - j'ai un [poireau](liste_ingredients)
+      - j'ai un [concombre](liste_ingredients)
+      - j'ai des [poivrons](liste_ingredients)
+      - j'ai un [poivron](liste_ingredients)
+      - j'ai une [salade](liste_ingredients)
+      - j'ai de la [laitue](liste_ingredients)
+      - j'ai des [oranges](liste_ingredients)
+      - j'ai des [bananes](liste_ingredients)
+      - j'ai des [fraises](liste_ingredients)
+      - j'ai des [framboises](liste_ingredients)
+      - j'ai des [myrtilles](liste_ingredients)
+      - j'ai des [poires](liste_ingredients)
+      - j'ai du [raisin](liste_ingredients)
+      - j'ai un [ananas](liste_ingredients)
+      - j'ai une [mangue](liste_ingredients)
+      - j'ai du [chocolat](liste_ingredients)
+      - j'ai du [cacao](liste_ingredients)
+      - j'ai de la [vanille](liste_ingredients)
+      - j'ai de la [levure chimique](liste_ingredients)
+      - j'ai de la [levure boulangère](liste_ingredients)
+      - j'ai des [herbes de Provence](liste_ingredients)
+      - j'ai du [thym](liste_ingredients) et du [romarin](liste_ingredients)
+      - j'ai du [pain](liste_ingredients) et de la [salade](liste_ingredients)
+      - j'ai de l'[origan](liste_ingredients)
+      - j'ai du [citron vert](liste_ingredients)
+      - j'ai des [tomate cerise](liste_ingredients)
+      - j'ai du [fromage râpé](liste_ingredients)
+      - j'ai du [mascarpone](liste_ingredients)
+      - j'ai du [fromage blanc](liste_ingredients)
+      - j'ai de la [ricotta](liste_ingredients)
+      - j'ai des [petits pois](liste_ingredients) et du [maïs](liste_ingredients)
+      - je te donne mes ingrédients : [œufs](liste_ingredients), [lait](liste_ingredients), [beurre](liste_ingredients), [farine](liste_ingredients)
+      - voici ce que j'ai : [poulet](liste_ingredients) / [riz](liste_ingredients) / [carottes](liste_ingredients) / [oignons](liste_ingredients)
+      - dans mon frigo il reste du [saumon](liste_ingredients)
+      - dans mon placard il reste du [quinoa](liste_ingredients)
+
+  - synonym: "œufs"
+    examples: |
+      - oeufs
+      - œuf
+      - oeuf
+
+  - lookup: liste_ingredients
+    examples: |
+      - œuf
+      - œufs
+      - oeuf
+      - oeufs
+      - lait
+      - beurre
+      - margarine
+      - crème
+      - crème fraîche
+      - yaourt
+      - fromage
+      - parmesan
+      - emmental
+      - mozzarella
+      - chèvre
+      - feta
+      - ricotta
+      - mascarpone
+      - fromage blanc
+      - fromage râpé
+      - jambon
+      - lardons
+      - bacon
+      - poulet
+      - dinde
+      - bœuf
+      - boeuf
+      - porc
+      - steak
+      - saucisse
+      - saumon
+      - thon
+      - sardines
+      - crevettes
+      - œufs de poisson
+      - tofu
+      - tempeh
+      - pois chiches
+      - lentilles
+      - haricots rouges
+      - haricots blancs
+      - petits pois
+      - maïs
+      - mais
+      - riz
+      - pâtes
+      - pates
+      - spaghetti
+      - penne
+      - coquillettes
+      - nouilles
+      - semoule
+      - couscous
+      - quinoa
+      - boulgour
+      - farine
+      - farine de blé
+      - farine de ble
+      - farine complète
+      - sucre
+      - sucre roux
+      - cassonade
+      - miel
+      - chocolat
+      - cacao
+      - vanille
+      - levure
+      - levure chimique
+      - levure boulangère
+      - sel
+      - poivre
+      - paprika
+      - curry
+      - cumin
+      - cannelle
+      - muscade
+      - piment
+      - herbes de Provence
+      - basilic
+      - persil
+      - coriandre
+      - menthe
+      - thym
+      - romarin
+      - origan
+      - ail
+      - oignon
+      - oignons
+      - échalote
+      - echalote
+      - poireau
+      - carotte
+      - pommes de terre
+      - pomme de terre
+      - patate
+      - patate douce
+      - tomate
+      - tomates
+      - concombre
+      - courgette
+      - aubergine
+      - poivron
+      - poivrons
+      - champignon
+      - champignons
+      - salade
+      - laitue
+      - épinards
+      - epinards
+      - brocoli
+      - chou-fleur
+      - chou
+      - avocat
+      - citron
+      - citron vert
+      - orange
+      - pomme
+      - pommes
+      - banane
+      - fraise
+      - framboise
+      - myrtille
+      - poire
+      - raisin
+      - ananas
+      - mangue
+      - tomate cerise
+      - olive
+      - olives
+      - huile
+      - huile d'olive
+      - vinaigre
+      - vinaigre balsamique
+      - moutarde
+      - ketchup
+      - mayonnaise
+      - sauce soja
+      - sauce tomate
+      - concentré de tomate
+      - pesto
+      - bouillon
+      - bouillon de légumes
+      - bouillon de poulet
+      - pain
+      - baguette
+      - mie de pain
+      - chapelure
+      - tortillas
+      - wrap
+      - pâte feuilletée
+      - pate feuilletee
+      - pâte brisée
+      - pate brisee
+      - riz basmati
+      - riz complet
+      - riz arborio
+      - farine de maïs
+      - farine de mais
 
   - intent: done_ingredients
     examples: |
@@ -66,6 +367,8 @@ nlu:
       - rien d'autre
       - c'est fini
       - c'est tout
+      - C'est bon
+      - Parfait
 
   - intent: choose_recipe
     examples: |

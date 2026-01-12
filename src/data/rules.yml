@@ -1,3 +1,22 @@
 version: "2.0"
 
 rules:
+  - rule: Collect ingredients after fridge mode start
+    steps:
+      - intent: start_fridge_mode
+      - action: utter_ask_ingredients_collect
+
+  - rule: Confirm ingredients after adding ingredient
+    steps:
+      - intent: add_ingredient
+      - action: utter_confirm_ingredients
+
+  - rule: Generate recipe after done ingredients
+    steps:
+      - intent: done_ingredients
+      - action: action_generate_recipe_from_ingredients
+
+  - rule: Generate recipe after recipe by name
+    steps:
+      - intent: start_recipe_by_name
+      - action: action_generate_recipe_from_name
