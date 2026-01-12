@@ -19,7 +19,7 @@ def call_openai_json(prompt: str, schema: Dict[str, Any]) -> Dict[str, Any]:
     """
 
     try:
-        from openai import OpenAI
+        import openai
     except ModuleNotFoundError as exc:
         raise RuntimeError(
             "La librairie 'openai' n'est pas installée. Installe-la puis relance l'action server."
@@ -31,9 +31,11 @@ def call_openai_json(prompt: str, schema: Dict[str, Any]) -> Dict[str, Any]:
             "OPENAI_API_KEY n'est pas défini. Configure la variable d'environnement et réessaie."
         )
 
+    # openai==0.28.1 (legacy) uses ChatCompletion.
+    # IMPORTANT: choose a model that exists for your account (ex: gpt-4o-mini, gpt-4o, gpt-3.5-turbo).
     model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
-    client = OpenAI(api_key=api_key)
+    openai.api_key = api_key
 
     system = (
         "Tu es un assistant de cuisine. "
@@ -43,35 +45,28 @@ def call_openai_json(prompt: str, schema: Dict[str, Any]) -> Dict[str, Any]:
         "Si un ingrédient est critique, mets alternative=null."
     )
 
+    # openai==0.28.1 doesn't support `response_format`/`json_schema`.
+    # We enforce strict JSON via instructions and parse defensively.
+    json_only_instructions = (
+        "\n\nIMPORTANT: Réponds UNIQUEMENT avec un objet JSON valide. "
+        "Aucun texte avant/après. Pas de markdown. "
+        "Respecte la structure attendue (clé racine 'recipe')."
+    )
+
     text: Optional[str] = None
+    resp = openai.ChatCompletion.create(
+        model=model,
+        messages=[
+            {"role": "system", "content": system + json_only_instructions},
+            {"role": "user", "content": prompt},
+        ],
+        temperature=0.2,
+    )
+
     try:
-        if hasattr(client, "responses"):
-            resp = client.responses.create(
-                model=model,
-                input=[
-                    {"role": "system", "content": system},
-                    {"role": "user", "content": prompt},
-                ],
-                response_format={
-                    "type": "json_schema",
-                    "json_schema": schema,
-                },
-                temperature=0.2,
-            )
-            text = getattr(resp, "output_text", None)
-        else:
-            raise AttributeError("responses API not available")
-    except Exception:
-        resp = client.chat.completions.create(
-            model=model,
-            messages=[
-                {"role": "system", "content": system},
-                {"role": "user", "content": prompt},
-            ],
-            response_format={"type": "json_object"},
-            temperature=0.2,
-        )
-        text = resp.choices[0].message.content
+        text = resp["choices"][0]["message"]["content"]
+    except Exception as exc:
+        raise RuntimeError(f"Réponse OpenAI inattendue: {resp}") from exc
 
     if not text:
         raise RuntimeError("Réponse OpenAI vide.")
@@ -105,12 +100,11 @@ def call_openai_tts(text: str) -> Dict[str, str]:
       - TTS_OUTPUT_DIR (défaut: tts_outputs)
     """
 
-    try:
-        from openai import OpenAI
-    except ModuleNotFoundError as exc:
-        raise RuntimeError(
-            "La librairie 'openai' n'est pas installée. Installe-la puis relance l'action server."
-        ) from exc
+    # openai==0.28.1 doesn't provide the modern TTS API used below.
+    raise RuntimeError(
+        "TTS n'est pas supporté avec openai==0.28.1. "
+        "Soit désactive TTS, soit passe à openai>=1.0 pour utiliser l'API audio.speech."
+    )
 
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
@@ -146,14 +140,16 @@ def call_openai_tts(text: str) -> Dict[str, str]:
         response.stream_to_file(str(file_path))
         audio_bytes = file_path.read_bytes()
     else:
-        raise RuntimeError("Réponse TTS OpenAI inattendue (format binaire non accessible).")
+        raise RuntimeError(
+            "Réponse TTS OpenAI inattendue (format binaire non accessible).")
 
     if not audio_bytes:
         raise RuntimeError("Réponse OpenAI TTS vide.")
 
     file_path.write_bytes(audio_bytes)
 
-    mime_type = "audio/mpeg" if audio_format.lower() in {"mp3", "mpeg"} else f"audio/{audio_format}"
+    mime_type = "audio/mpeg" if audio_format.lower(
+    ) in {"mp3", "mpeg"} else f"audio/{audio_format}"
     audio_b64 = base64.b64encode(audio_bytes).decode("ascii")
 
     return {
