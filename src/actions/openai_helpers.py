@@ -8,16 +8,6 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 
-def _get_float_env(name: str, default: float) -> float:
-    raw = os.getenv(name)
-    if raw is None or not str(raw).strip():
-        return default
-    try:
-        return float(raw)
-    except Exception:
-        return default
-
-
 def call_openai_json(prompt: str, schema: Dict[str, Any]) -> Dict[str, Any]:
     """Appel OpenAI qui retourne un dict JSON (robuste).
 
@@ -25,7 +15,7 @@ def call_openai_json(prompt: str, schema: Dict[str, Any]) -> Dict[str, Any]:
     - Sinon fallback sur `chat.completions.create(..., response_format=json_object)`.
 
     Requis: variable d'environnement OPENAI_API_KEY.
-    Optionnel: OPENAI_MODEL (défaut: gpt-4o-mini).
+    Optionnel: OPENAI_MODEL (défaut: gpt-4o-mini), OPENAI_TIMEOUT_S (défaut: 60).
     """
 
     try:
@@ -44,12 +34,11 @@ def call_openai_json(prompt: str, schema: Dict[str, Any]) -> Dict[str, Any]:
     # openai==0.28.1 (legacy) uses ChatCompletion.
     # IMPORTANT: choose a model that exists for your account (ex: gpt-4o-mini, gpt-4o, gpt-3.5-turbo).
     model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-
-    # Keep actions responsive: if OpenAI hangs, Rasa shell can time out waiting.
-    # You can tune this with OPENAI_REQUEST_TIMEOUT (seconds).
-    request_timeout = _get_float_env("OPENAI_REQUEST_TIMEOUT", 45.0)
+    timeout_s = float(os.getenv("OPENAI_TIMEOUT_S", "60"))
 
     openai.api_key = api_key
+    # Configure le timeout pour aiohttp (utilisé par openai==0.28.1)
+    openai.request_timeout = timeout_s
 
     system = (
         "Tu es un assistant de cuisine. "
@@ -68,26 +57,14 @@ def call_openai_json(prompt: str, schema: Dict[str, Any]) -> Dict[str, Any]:
     )
 
     text: Optional[str] = None
-
-    try:
-        resp = openai.ChatCompletion.create(
-            model=model,
-            messages=[
-                {"role": "system", "content": system + json_only_instructions},
-                {"role": "user", "content": prompt},
-            ],
-            temperature=0.2,
-            request_timeout=request_timeout,
-        )
-    except Exception as exc:
-        # openai==0.28.1 exposes typed exceptions under openai.error; keep this defensive.
-        err_name = exc.__class__.__name__
-        msg = str(exc)
-        if "timeout" in err_name.lower() or "timeout" in msg.lower():
-            raise RuntimeError(
-                f"L'appel OpenAI a expiré après ~{int(request_timeout)}s. Réessaie, ou augmente OPENAI_REQUEST_TIMEOUT."
-            ) from exc
-        raise RuntimeError(f"Erreur OpenAI: {msg}") from exc
+    resp = openai.ChatCompletion.create(
+        model=model,
+        messages=[
+            {"role": "system", "content": system + json_only_instructions},
+            {"role": "user", "content": prompt},
+        ],
+        temperature=0.2,
+    )
 
     try:
         text = resp["choices"][0]["message"]["content"]
