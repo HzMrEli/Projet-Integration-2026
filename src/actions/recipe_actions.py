@@ -45,9 +45,14 @@ class ActionGenerateRecipeFromIngredients(Action):
         except Exception as exc:
             dispatcher.utter_message(text=f"Erreur lors de l'appel OpenAI: {exc}")
             return []
+        
+        dump = json.dumps(data, ensure_ascii=False)
+        dispatcher.utter_message(
+            text=data["name"]
+        )
 
         dispatcher.utter_message(
-            text=json.dumps(data, ensure_ascii=False),
+            text=dump,
             json_message=data,
         )
         recipe = data.get("recipe") if isinstance(data, dict) else None
