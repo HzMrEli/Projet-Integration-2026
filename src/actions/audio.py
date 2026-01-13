@@ -23,7 +23,8 @@ def play_audio_local(file_path: str) -> None:
     if system == "windows":
         try:
             import winsound
-        except Exception:
+        except Exception as e:
+            print(f"[AUDIO] winsound import error: {e}")
             return
 
         flags = winsound.SND_FILENAME
@@ -31,6 +32,9 @@ def play_audio_local(file_path: str) -> None:
             flags |= winsound.SND_ASYNC
 
         try:
+            print(f"[AUDIO] Trying to play: {file_path}")
             winsound.PlaySound(file_path, flags)
-        except Exception:
+            print(f"[AUDIO] PlaySound call finished for: {file_path}")
+        except Exception as e:
+            print(f"[AUDIO] winsound.PlaySound error: {e}")
             return

@@ -117,10 +117,10 @@ responses:
     - text: "Quels ingrédients avez-vous ?"
 
   utter_recipe_ingredients:
-    - text: "Très bien, je vous propose de faire le plat {nom_recette}. Pour ça il vous faudra {formatted_ingredients}. "
+    - text: "Très bien, je vous propose de faire le plat {nom_recette} avec {formatted_ingredients}. Cette recette vous convient ?"
 
   utter_recipe_found_details:
-    - text: "Voici la recette de {nom_recette}. Il vous faudra : {formatted_ingredients}."
+    - text: "Voici la recette de {nom_recette}. Il vous faudra : {formatted_ingredients}. Est-ce que cela vous convient ?"
 
   utter_ask_full_or_step:
     - text: "Voulez-vous la recette complète, ou un guidage étape par étape ?"

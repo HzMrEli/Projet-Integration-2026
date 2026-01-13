@@ -14,6 +14,13 @@ class ActionTextToSpeech(Action):
     def name(self) -> Text:
         return "action_text_to_speech"
 
+    def get_last_bot_message(self, tracker: Tracker) -> Text | None:
+        """Récupère le dernier message textuel envoyé par le bot."""
+        for event in reversed(tracker.events):
+            if event.get("event") == "bot" and event.get("text"):
+                return event.get("text")
+        return None
+
     def run(
         self,
         dispatcher: CollectingDispatcher,
@@ -21,15 +28,19 @@ class ActionTextToSpeech(Action):
         domain: Dict[Text, Any],
     ) -> List[EventType]:
 
+        # 1. Priorité aux slots explicites (définis par une Custom Action précédente)
         text = (
             tracker.get_slot("tts_text")
             or tracker.get_slot("texte_a_dire")
             or tracker.get_slot("texte")
-            or (tracker.latest_message or {}).get("text")
         )
 
+        # 2. Sinon, on lit le dernier message envoyé par le bot (cas des utter_...)
+        if not text:
+            text = self.get_last_bot_message(tracker)
+
         if not text or not str(text).strip():
-            # Action technique: no user message
+            # Rien à lire
             return []
 
         try:
@@ -42,7 +53,7 @@ class ActionTextToSpeech(Action):
             play_audio_local_async(result["file_path"])
 
         # Optional: emit payload to channel if needed
-        if truthy_env("TTS_EMIT_MESSAGE", default=False):
+        if truthy_env("TTS_EMIT_MESSAGE", default=True):
             payload = {
                 "tts": {
                     "text": result["text"],

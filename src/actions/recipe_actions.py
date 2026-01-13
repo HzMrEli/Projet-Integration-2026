@@ -129,11 +129,9 @@ class ActionGenerateRecipeFromName(Action):
             dispatcher.utter_message(
                 text=f"Erreur lors de l'appel OpenAI: {exc}")
             return []
-
-        dispatcher.utter_message(
-            text=json.dumps(data, ensure_ascii=False),
-            json_message=data,
-        )
+        
+        dump = json.dumps(data, ensure_ascii=False)
+        
         recipe = data.get("recipe") if isinstance(data, dict) else None
         steps = recipe.get("steps") if isinstance(recipe, dict) else None
         if not isinstance(steps, list):

@@ -7,6 +7,9 @@ import uuid
 from pathlib import Path
 from typing import Any, Dict, Optional
 
+from openai import api_key
+import openai
+
 
 def call_openai_json(prompt: str, schema: Dict[str, Any]) -> Dict[str, Any]:
     """Appel OpenAI qui retourne un dict JSON (robuste).
@@ -103,51 +106,53 @@ def call_openai_tts(text: str) -> Dict[str, str]:
       - TTS_OUTPUT_DIR (défaut: tts_outputs)
     """
 
-    # openai==0.28.1 doesn't provide the modern TTS API used below.
-    raise RuntimeError(
-        "TTS n'est pas supporté avec openai==0.28.1. "
-        "Soit désactive TTS, soit passe à openai>=1.0 pour utiliser l'API audio.speech."
+    # openai==0.28.1 doesn't have the new client.audio.speech helper.
+    # We use direct HTTP request instead.
+    openai.api_key = api_key
+    url = "https://api.openai.com/v1/audio/speech"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+    }
+    
+    data = {
+        "model": os.getenv("OPENAI_TTS_MODEL", "tts-1"),
+        "input": text,
+        "voice": os.getenv("OPENAI_TTS_VOICE", "alloy"),
+        "response_format": os.getenv("OPENAI_TTS_FORMAT", "wav"),
+    }
+
+    import requests
+    response = requests.post(
+        url,
+        headers=headers,
+        json=data,
+        timeout=float(os.getenv("OPENAI_TIMEOUT_S", "60"))
     )
-
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        raise RuntimeError(
-            "OPENAI_API_KEY n'est pas défini. Configure la variable d'environnement et réessaie."
-        )
-
-    model = os.getenv("OPENAI_TTS_MODEL", "tts-1")
-    voice = os.getenv("OPENAI_TTS_VOICE", "alloy")
-    audio_format = os.getenv("OPENAI_TTS_FORMAT", "wav")
+    
+    if response.status_code != 200:
+        raise RuntimeError(f"OpenAI TTS API Error: {response.status_code} - {response.text}")
 
     out_dir = Path(os.getenv("TTS_OUTPUT_DIR", "tts_outputs"))
     out_dir.mkdir(parents=True, exist_ok=True)
-
+    
+    audio_format = data["response_format"]
     filename = f"tts_{uuid.uuid4().hex}.{audio_format}"
     file_path = out_dir / filename
 
-    client = openai.api_key = api_key
+    file_path.write_bytes(response.content)
+    
+    with open(file_path, "rb") as f:
+        audio_base64 = base64.b64encode(f.read()).decode("utf-8")
 
-    response = client.audio.speech.create(
-        model=model,
-        voice=voice,
-        input=text,
-        format=audio_format,
-    )
-
-    audio_bytes: Optional[bytes] = None
-    if hasattr(response, "read"):
-        audio_bytes = response.read()
-    elif hasattr(response, "content"):
-        audio_bytes = response.content  # type: ignore[assignment]
-    elif hasattr(response, "stream_to_file"):
-        response.stream_to_file(str(file_path))
-        audio_bytes = file_path.read_bytes()
-    else:
-        raise RuntimeError(
-            "Réponse TTS OpenAI inattendue (format binaire non accessible).")
-
-    if not audio_bytes:
-        raise RuntimeError("Réponse OpenAI TTS vide.")
+    return {
+        "text": text,
+        "file_path": str(file_path.absolute()),
+        "audio_base64": audio_base64,
+        "mime_type": f"audio/{audio_format}",
+        "model": data["model"],
+        "voice": data["voice"],
+    }
 
     file_path.write_bytes(audio_bytes)
 

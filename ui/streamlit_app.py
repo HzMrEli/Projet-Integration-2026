@@ -67,6 +67,24 @@ def _render_bot_message(msg: Dict[str, Any]) -> None:
         st.image(image)
 
     if custom is not None:
+        # Auto-play TTS if available
+        if isinstance(custom, dict) and "tts" in custom:
+            tts_data = custom["tts"]
+            audio_b64 = tts_data.get("audio_base64")
+            if audio_b64:
+                try:
+                    mime_type = tts_data.get("mime_type", "audio/wav")
+                    # Hack for autoplay on older Streamlit versions (<1.23.0)
+                    audio_html = f"""
+                        <audio controls autoplay style="width: 100%;">
+                        <source src="data:{mime_type};base64,{audio_b64}" type="{mime_type}">
+                        Your browser does not support the audio element.
+                        </audio>
+                    """
+                    st.markdown(audio_html, unsafe_allow_html=True)
+                except Exception:
+                    pass
+
         with st.expander("Données (custom/json_message)", expanded=False):
             st.json(custom)
 
