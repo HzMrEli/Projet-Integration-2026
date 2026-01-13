@@ -47,20 +47,14 @@ class ActionGenerateRecipeFromIngredients(Action):
             return []
         
         dump = json.dumps(data, ensure_ascii=False)
-        dispatcher.utter_message(
-            text=data["name"]
-        )
 
-        dispatcher.utter_message(
-            text=dump,
-            json_message=data,
-        )
         recipe = data.get("recipe") if isinstance(data, dict) else None
         steps = recipe.get("steps") if isinstance(recipe, dict) else None
         if not isinstance(steps, list):
             steps = []
 
         return [
+            SlotSet("nom_recette", data["recipe"]["name"]),
             SlotSet("recipe_card", data),
             SlotSet("recipe_json", json.dumps(data, ensure_ascii=False)),
             SlotSet("recipe_steps", steps),
