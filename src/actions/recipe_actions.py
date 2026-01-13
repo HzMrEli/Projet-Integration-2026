@@ -43,9 +43,10 @@ class ActionGenerateRecipeFromIngredients(Action):
             dispatcher.utter_message(text=str(exc))
             return []
         except Exception as exc:
-            dispatcher.utter_message(text=f"Erreur lors de l'appel OpenAI: {exc}")
+            dispatcher.utter_message(
+                text=f"Erreur lors de l'appel OpenAI: {exc}")
             return []
-        
+
         dump = json.dumps(data, ensure_ascii=False)
 
         recipe = data.get("recipe") if isinstance(data, dict) else None
@@ -54,7 +55,7 @@ class ActionGenerateRecipeFromIngredients(Action):
             steps = []
 
         return [
-            SlotSet("nom_recette", data["recipe"]["name"]),
+            SlotSet("nom_recette", data["recipe"].get("title")),
             SlotSet("recipe_card", data),
             SlotSet("recipe_json", json.dumps(data, ensure_ascii=False)),
             SlotSet("recipe_steps", steps),
@@ -103,7 +104,8 @@ class ActionGenerateRecipeFromName(Action):
             dispatcher.utter_message(text=str(exc))
             return []
         except Exception as exc:
-            dispatcher.utter_message(text=f"Erreur lors de l'appel OpenAI: {exc}")
+            dispatcher.utter_message(
+                text=f"Erreur lors de l'appel OpenAI: {exc}")
             return []
 
         dispatcher.utter_message(
@@ -116,12 +118,14 @@ class ActionGenerateRecipeFromName(Action):
             steps = []
 
         return [
+            SlotSet("nom_recette", data["recipe"].get("name")),
             SlotSet("recipe_card", data),
             SlotSet("recipe_json", json.dumps(data, ensure_ascii=False)),
             SlotSet("recipe_steps", steps),
             SlotSet("step_index", 0.0),
             SlotSet("last_step_text", None),
         ]
+
 
 class ActionTellRecipeStep(Action):
     def name(self) -> Text:
@@ -197,7 +201,8 @@ class ActionTellRecipeStep(Action):
             idx = max(current_index, 0)
 
         if idx >= len(steps):
-            dispatcher.utter_message(text="C'est terminé : tu as déjà fait toutes les étapes.")
+            dispatcher.utter_message(
+                text="C'est terminé : tu as déjà fait toutes les étapes.")
             return [SlotSet("step_index", float(len(steps)))]
 
         step = steps[idx] if isinstance(steps[idx], dict) else {}
@@ -206,7 +211,8 @@ class ActionTellRecipeStep(Action):
         timer_min = step.get("timer_min")
 
         if not isinstance(instruction, str) or not instruction.strip():
-            dispatcher.utter_message(text="Je n'arrive pas à lire cette étape. Dis 'suivant' pour passer à la prochaine.")
+            dispatcher.utter_message(
+                text="Je n'arrive pas à lire cette étape. Dis 'suivant' pour passer à la prochaine.")
             return [SlotSet("step_index", float(idx + 1))]
 
         prefix = "Étape"

@@ -5,49 +5,47 @@ stories:
     steps:
       - intent: greet
       - action: utter_greet
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: start_fridge_mode
       - action: utter_ask_ingredients_collect
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: add_ingredient
-      - action: utter_confirm_ingredients
-      - action: action_text_to_speech
-      - intent: done_ingredients
       - action: action_generate_recipe_from_ingredients
+      - action: utter_recipe_ingredients
+      # - action: action_text_to_speech
       - action: utter_ask_validate_recipe
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
 
   - story: utilisateur donne directement des ingrédients -> génération recette
     steps:
       - intent: add_ingredient
-      - action: utter_confirm_ingredients
-      - action: action_text_to_speech
-      - intent: done_ingredients
       - action: action_generate_recipe_from_ingredients
+      - action: utter_recipe_ingredients
+      # - action: action_text_to_speech
       - action: utter_ask_validate_recipe
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
 
   - story: ingrédients -> recette ok -> étape par étape -> prêt -> étapes 1 par 1
     steps:
       - intent: start_fridge_mode
       - action: utter_ask_ingredients_collect
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: add_ingredient
-      - action: utter_confirm_ingredients
-      - action: action_text_to_speech
-      - intent: add_ingredient
-      - action: utter_confirm_ingredients
-      - action: action_text_to_speech
-      - intent: done_ingredients
       - action: action_generate_recipe_from_ingredients
+      - action: utter_recipe_ingredients
+      # - action: action_text_to_speech
+      - intent: add_ingredient
+      - action: action_generate_recipe_from_ingredients
+      - action: utter_recipe_ingredients
+      # - action: action_text_to_speech
       - action: utter_ask_validate_recipe
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: affirm
       - action: utter_ask_full_or_step
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: start_step_by_step
       - action: utter_ask_ready_to_start
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: affirm
       - action: action_tell_recipe_step
       - intent: next_step
@@ -59,39 +57,39 @@ stories:
     steps:
       - intent: start_fridge_mode
       - action: utter_ask_ingredients_collect
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: add_ingredient
-      - action: utter_confirm_ingredients
-      - action: action_text_to_speech
-      - intent: done_ingredients
+      - action: action_generate_recipe_from_ingredients
+      - action: utter_recipe_ingredients
+      # - action: action_text_to_speech
       - action: action_generate_recipe_from_ingredients
       - action: utter_ask_validate_recipe
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: deny
       - action: utter_propose_another_recipe
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - action: action_generate_recipe_from_ingredients
       - action: utter_ask_validate_recipe
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: affirm
       - action: utter_ask_full_or_step
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
 
   - story: ingrédients -> recette choisie via option -> étape par étape
     steps:
       - intent: add_ingredient
-      - action: utter_confirm_ingredients
-      - action: action_text_to_speech
-      - intent: done_ingredients
+      - action: action_generate_recipe_from_ingredients
+      - action: utter_recipe_ingredients
+      # - action: action_text_to_speech
       - action: action_generate_recipe_from_ingredients
       - action: utter_ask_validate_recipe
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: choose_recipe
       - action: utter_ask_full_or_step
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: start_step_by_step
       - action: utter_ask_ready_to_start
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: affirm
       - action: action_tell_recipe_step
 
@@ -99,10 +97,10 @@ stories:
     steps:
       - intent: start_step_by_step
       - action: utter_ask_ready_to_start
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: deny
       - action: utter_waiting_ready
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: affirm
       - action: action_tell_recipe_step
 
@@ -110,7 +108,7 @@ stories:
     steps:
       - intent: start_step_by_step
       - action: utter_ask_ready_to_start
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: affirm
       - action: action_tell_recipe_step
       - intent: repeat_step
@@ -122,15 +120,15 @@ stories:
     steps:
       - intent: start_step_by_step
       - action: utter_ask_ready_to_start
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: affirm
       - action: action_tell_recipe_step
       - intent: pause_recipe
       - action: utter_paused
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: resume_recipe
       - action: utter_resumed
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: next_step
       - action: action_tell_recipe_step
 
@@ -138,24 +136,24 @@ stories:
     steps:
       - intent: greet
       - action: utter_greet
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: start_recipe_by_name
       - action: action_generate_recipe_from_name
       - action: utter_ask_validate_recipe
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
 
   - story: recette par nom -> valide -> étape par étape
     steps:
       - intent: start_recipe_by_name
       - action: action_generate_recipe_from_name
       - action: utter_ask_validate_recipe
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: affirm
       - action: utter_ask_full_or_step
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: start_step_by_step
       - action: utter_ask_ready_to_start
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: affirm
       - action: action_tell_recipe_step
 
@@ -163,7 +161,7 @@ stories:
     steps:
       - intent: start_step_by_step
       - action: utter_ask_ready_to_start
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: affirm
       - action: action_tell_recipe_step
       - intent: next_step
@@ -175,7 +173,7 @@ stories:
     steps:
       - intent: pause_recipe
       - action: utter_paused
-      - action: action_text_to_speech
+      # - action: action_text_to_speech
       - intent: resume_recipe
       - action: utter_resumed
-      - action: action_text_to_speech
+      # - action: action_text_to_speech

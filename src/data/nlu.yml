@@ -510,16 +510,6 @@ nlu:
       - madeleines
       - financiers
 
-  - intent: done_ingredients
-    examples: |
-      - c'est tout
-      - j'ai terminé
-      - rien d'autre
-      - c'est fini
-      - c'est tout
-      - C'est bon
-      - Parfait
-
   - intent: choose_recipe
     examples: |
       - option 1

@@ -85,6 +85,23 @@ slots:
     influence_conversation: false
     initial_value: "normal"
 
+  # --- Slots techniques (TTS / UI) ---
+  tts_text:
+    type: text
+    influence_conversation: false
+  texte_a_dire:
+    type: text
+    influence_conversation: false
+  texte:
+    type: text
+    influence_conversation: false
+  tts_last_file:
+    type: text
+    influence_conversation: false
+  ui_event:
+    type: any
+    influence_conversation: false
+
 responses:
   utter_greet:
     - text: "Bonjour ! Je suis votre assistant culinaire. Que voulez-vous cuisiner ?"
@@ -92,26 +109,23 @@ responses:
   utter_goodbye:
     - text: "Au revoir ! Bon appétit !"
 
-  utter_ask_ingredients:
-    - text: "Quels ingrédients avez-vous dans votre frigo ?"
-
   utter_ask_ingredients_collect:
-    - text: "Listez vos ingrédients (une phrase). Quand vous avez terminé, dites : 'c'est tout'."
+    - text: "Quels ingrédients avez-vous ?"
 
-  utter_confirm_ingredients:
-    - text: "Très bien, j'ai noté : {liste_ingredients}. Quand vous avez terminé, dites : 'c'est tout'."
+  utter_recipe_ingredients:
+    - text: "Très bien, je vous propose de faire le plat {nom_recette} avec {liste_ingredients}. "
 
   utter_ask_full_or_step:
     - text: "Voulez-vous la recette complète, ou un guidage étape par étape ?"
 
   utter_ask_validate_recipe:
-    - text: "Cette recette vous convient ? (oui / une autre)"
+    - text: "Cette recette vous convient ?"
 
   utter_propose_another_recipe:
     - text: "D'accord, je vous propose une autre recette avec ces ingrédients."
 
   utter_ask_ready_to_start:
-    - text: "Êtes-vous prêt à commencer ? (oui / non)"
+    - text: "Êtes-vous prêt à commencer ?"
 
   utter_waiting_ready:
     - text: "Pas de souci. Dites 'oui' quand vous êtes prêt à commencer."
