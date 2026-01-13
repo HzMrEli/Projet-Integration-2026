@@ -1,79 +1,152 @@
-# Projet-Integration-2026
+# Projet Intégration 2026 - Assistant Culinaire Intelligent
 
-Idée: Assistant de cuisine
-Chabot recette oral (sans toucher le téléphone car mains sales), l'utilisateur donne les ingrédients qu'il a et le chat bot propose des recettes.
-Il demande si il veut la recette en entier, ou suivre étape par étape avec l'utilisateur.
-Si étape par étape : le chatbot donne chaque étapes avec validation de l'utilisateur entre chaque étapes, pour continuer.
+## Description
 
-**Tâche 1 – Collecte de la demande**
-Objectif : comprendre ce que l’utilisateur veut cuisiner, sans qu’il touche l’écran.
+Ce projet est un assistant conversationnel intelligent conçu pour accompagner les utilisateurs en cuisine. Il combine la robustesse de **Rasa** pour la gestion du dialogue, la créativité des modèles **OpenAI (GPT)** pour la génération de recettes personnalisées, et une interface utilisateur moderne développée avec **Streamlit**.
 
-Mode “AlimentsFrigo” :
+L'application intègre des fonctionnalités avancées d'interaction vocale, permettant à l'utilisateur de dialoguer naturellement avec l'assistant (Speech-to-Text et Text-to-Speech).
 
-L’assistant demande de lister les ingrédients à l’oral, un par un ou par lot : “dis-moi ce qu’il y a dans ton frigo / placard”.​
-Option de préciser contraintes : temps max, niveau de difficulté, régime, végé.
-​
+## Équipe
 
-Mode “Nom de recette” :
+- **Eliot PAZZÉ**
+- **Alex RHODES**
+- **Nelson SANCHEZ**
+- **Hoang Long DUONG**
 
-L’utilisateur donne un plat (“pâtes carbonara pour 2 personnes”) et éventuellement le temps disponible et le niveau de cuisine.
-L’assistant reformule pour confirmation : “Ok, carbonara pour 2 personnes, en moins de 30 minutes, c’est bien ça ?”.
-​
+## Fonctionnalités Clés
 
-**Tâche 2 – Proposition de recettes et options**
-Objectif : transformer les ingrédients ou la recette cible en proposition concrète.
+- **Génération de Recettes** : Suggère des recettes détaillées basées sur les ingrédients fournis par l'utilisateur via l'API OpenAI.
+- **Interface Vocale (Push-to-Talk)** : Permet de parler directement à l'assistant via le navigateur.
+- **Synthèse Vocale (TTS)** : L'assistant peut lire les réponses à haute voix pour une expérience mains-libres en cuisine.
+- **Compréhension du Langage Naturel (NLU)** : Utilise Rasa pour comprendre les intentions de l'utilisateur et gérer le contexte de la conversation.
+- **Interface Web Moderne** : Une UI claire et réactive propulsée par Streamlit.
 
-Si entrée par ingrédients :
+## Stack Technique
 
-Générer une liste de recettes possibles avec score de “compatibilité ingrédients” (recette faisable tout de suite, ou avec quelques ingrédients manquants).
-Pour chaque recette, annoncer : nom, temps, difficulté, nombre de personnes, et éventuellement “tu n’as pas : oignon, crème”.
-​
+Le projet repose sur une stack Python robuste :
 
-Si entrée par nom de recette :
+- **Noyau IA & NLU** : [Rasa 2.8](https://rasa.com/) (Open Source Framework)
+- **Intelligence Générative** : [OpenAI API](https://openai.com/)
+- **Frontend** : [Streamlit](https://streamlit.io/)
+- **Gestion des Dépendances** : `uv` / `pip` (standard `pyproject.toml`)
 
-Vérifier les ingrédients nécessaires et annoncer ce qui manque.​
-Proposer éventuellement des substitutions simples (ex : crème → lait + beurre).
+## Structure du Projet
 
-Si manque d’ingrédients critique, possibilité d’énoncer une liste de courses vocale.​
+```
+Projet-Integration-2026/
+├── src/                    # Cœur du projet Rasa
+│   ├── actions/            # Actions Python personnalisées (Intégration OpenAI, TTS, etc.)
+│   ├── data/               # Données d'entraînement (NLU, Stories, Rules)
+│   ├── models/             # Modèles Rasa entraînés (.tar.gz)
+│   ├── config.yml          # Configuration du pipeline NLU et des politiques
+│   ├── domain.yml          # Définition du domaine (Intents, Slots, Responses)
+│   └── endpoints.yml       # Configuration des endpoints (Action Server, Tracker Store)
+├── ui/                     # Application Frontend
+│   ├── components/         # Composants Streamlit personnalisés (ex: Push-to-Talk)
+│   └── streamlit_app.py    # Point d'entrée de l'interface graphique
+├── start_rasa_with_api.ps1 # Script de démarrage automatisé (Windows)
+├── pyproject.toml          # Fichier de configuration du projet et dépendances
+└── main.py                 # Script utilitaire d'entrée
+```
 
-**Tâche 3 – Guidage pas-à-pas de la recette**
-Objectif : accompagner l’utilisateur pendant la cuisson sans le presser.
+## Installation
 
-Phase de départ de recette :
+### Prérequis
+- **Python 3.8** (Version recommandée pour la compatibilité avec Rasa 2.x)
+- Une clé API **OpenAI** valide.
 
-Lire tous les ingrédients et quantités, laisser le temps de tout sortir, avec commandes “répète”, “plus lentement”.
-Option d’ajuster les quantités en fonction du nombre de personnes avant de commencer vraiment.
-Demander quand l'utilisateur est prêt à commencer la recette (tout les ingrédients sont sorti etc)
-​
-Phase recette étape par étape :
+### 1. Cloner le dépôt
+```bash
+git clone <url-du-repo>
+cd Projet-Integration-2026
+```
 
-Chaque étape doit être courte et lue séparément, l’assistant attend un signal (“étape suivante”, “j’ai fini”, “répète”, "ensuite") avant de continuer ou de reprendre.
+### 2. Configurer l'environnement virtuel
+Il est fortement recommandé d'utiliser un environnement virtuel pour isoler les dépendances.
 
-BONUS: si une étape contient “cuire 10 minutes”, l’assistant propose automatiquement un minuteur intégré (“je lance un minuteur de 10 minutes ?”).
-Possibilité de poser des questions contextuelles : “c’est quoi dorer ?”, “comment savoir si c’est cuit ?”.
+```bash
+# Création venv
+python -m venv .venv
 
-Diagramme :
-![Diagramme conversationnel](Diagramme_conversation.pdf "Diagramme conversationnel")
+# Activation (Windows)
+.venv\Scripts\Activate
 
-Intentions:
+# Activation (Linux/Mac)
+source .venv/bin/activate
+```
 
-- Intent “AlimentsFrigo” :
-  Slots : liste_ingredients, temps_max, difficulté (débutant / intermédiaire / avancé), type_plat (rapide, équilibré, dessert…), contraintes (végé, sans gluten…).
-  ​
-- Intent “NomRecette” :
-  Slots : nom_recette, nb_personnes, temps_max, difficulté_souhaitée, niveau_cuistot (débutant, confirmé).
-  ​
-- Intent “GuidageRecette” :
-  Slots : id_recette, étape_courante, minuteurs_actifs.
+### 3. Installer les dépendances
+Le projet utilise `pyproject.toml`.
 
-**Tester:**
+Si vous utilisez `uv` (recommandé pour la rapidité) :
+```bash
+uv sync
+```
 
-- Faire un `uv sync` pour setup le .venv
+Sinon, avec `pip` :
+```bash
+pip install .
+```
 
-- Aller dans /src et Activer l'environnement: `.venv\Scripts\activate` pour être dans le bon .venv (src)
+## Utilisation
 
-- Train le model rasa avec: `rasa train`
+### Entraînement Initial du Modèle (Obligatoire)
+Avant de lancer l'application pour la première fois, il est impératif d'entraîner le modèle Rasa.
 
-- Dans le script PowerShell `start_rasa_with_api.ps1` à la racine du projet, ajouter votre clé OpenAI à la place de `TA_CLE_OPENAI_ICI` 
+```bash
+cd src
+rasa train
+```
 
-- Lancer RASA + Interface graphique: `.\start_rasa_with_api.ps1`
+Une fois le modèle entraîné (création d'un fichier `.tar.gz` dans `src/models/`), vous pouvez passer au démarrage.
+
+### Démarrage Automatisé (Windows)
+Un script PowerShell `start_rasa_with_api.ps1` est fourni pour lancer et orchestrer les trois services nécessaires (Serveur Rasa, Serveur d'Actions, UI Streamlit).
+
+1. Ouvrez PowerShell.
+2. Définissez votre clé API dans la première ligne du script `start_rasa_with_api.ps1` : 
+    ```powershell
+    $OPENAI_API_KEY = "votre-clé-sk-..."
+    ```
+
+3. Exécutez le script :
+   ```powershell
+   .\start_rasa_with_api.ps1
+   ```
+
+### Démarrage Manuel (Linux/Mac/Windows)
+Si vous préférez lancer les services manuellement, ouvrez **3 terminaux** distincts avec l'environnement virtuel activé (`source .venv/bin/activate`).
+
+**Terminal 1 : Serveur Rasa (API)**
+```bash
+cd src
+$env:OPENAI_API_KEY="votre-clé"
+rasa run --enable-api
+```
+
+**Terminal 2 : Serveur d'Actions Rasa**
+Ce serveur gère la logique métier et les appels à OpenAI.
+```bash
+cd src
+$env:OPENAI_API_KEY="votre-clé"
+rasa run actions
+```
+
+**Terminal 3 : Interface Utilisateur**
+```bash
+cd ui
+streamlit run streamlit_app.py
+```
+
+## Tests
+
+TODO: Ajouter des instructions pour les tests 
+
+## Diagramme Conversationnel
+
+![Diagramme Conversationnel](Diagramme_conversationnel.png)
+
+---
+*Projet développé dans le cadre de la formation SRI 5A, mineure Interaction - 2026 - UPSSITECH.*
+
+

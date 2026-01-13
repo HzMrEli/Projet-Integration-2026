@@ -1,10 +1,10 @@
-$OPENAI_API_KEY = "azedzads"
+$OPENAI_API_KEY = "your_api_key_here"
 
 $root = $PSScriptRoot
 $venv = "$root\.venv\Scripts\Activate.ps1"
 $src  = "$root\src"
 
-Write-Host "🚀 Démarrage de l'environnement..." -ForegroundColor Cyan
+Write-Host "Demarrage de l'environnement..." -ForegroundColor Cyan
 
 # 1. Lancer Rasa Server (API)
 Write-Host "Lancement de Rasa Server (API)..." -ForegroundColor Yellow
@@ -13,8 +13,8 @@ Start-Process powershell -ArgumentList `
     "-Command",
     "& '$venv'; cd '$src'; `$env:OPENAI_API_KEY='$OPENAI_API_KEY'; `$host.UI.RawUI.WindowTitle='Rasa Server'; rasa run --enable-api"
 
-# ⏳ Attente pour laisser le temps à Rasa Server de démarrer
-Write-Host "⏳ Attente du démarrage de Rasa Server..." -ForegroundColor DarkYellow
+# Attente du demarrage de Rasa Server
+Write-Host "Attente du demarrage de Rasa Server..." -ForegroundColor DarkYellow
 Start-Sleep -Seconds 5
 
 # 2. Lancer Rasa Action Server
