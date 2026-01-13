@@ -5,7 +5,8 @@ import hashlib
 import io
 import os
 import base64
-from typing import Any, Dict, List, Optional
+import uuid
+from typing import Any, Dict, List, Optional, cast
 
 import requests
 import streamlit as st
@@ -17,7 +18,7 @@ from ptt_component import push_to_talk_audio
 def _chat_message(role: str):
     chat_message = getattr(st, "chat_message", None)
     if callable(chat_message):
-        with chat_message(role):
+        with cast(Any, chat_message)(role):
             yield
     else:
         with st.container():
@@ -52,6 +53,40 @@ def _get_rasa_tracker_slots(rasa_url: str, sender_id: str, timeout_s: float = 10
     tracker = resp.json()
     slots = tracker.get("slots")
     return slots if isinstance(slots, dict) else {}
+
+
+def _reset_rasa_conversation(rasa_url: str, sender_id: str, timeout_s: float = 10.0) -> None:
+    """Reset conversation côté Rasa Core.
+
+    Essaie d'abord DELETE /tracker (si l'API le supporte), sinon fallback via un event 'restart'.
+    """
+
+    base = rasa_url.rstrip("/")
+
+    # 1) Delete tracker (best effort)
+    delete_url = f"{base}/conversations/{sender_id}/tracker"
+    try:
+        resp = requests.delete(delete_url, timeout=timeout_s)
+        if 200 <= resp.status_code < 300:
+            return
+    except requests.RequestException:
+        pass
+
+    # 2) Fallback: inject restart event
+    events_url = f"{base}/conversations/{sender_id}/tracker/events"
+    for event_payload in (
+        {"event": "restart"},
+        # Dans certaines config, les slots/form peuvent rester dans un état inattendu.
+        # Ce reset est safe et réduit fortement les conversations "bloquées".
+        {"event": "reset_slots"},
+    ):
+        try:
+            resp = requests.post(events_url, json=event_payload, timeout=timeout_s)
+            if not (200 <= resp.status_code < 300):
+                # Si l'endpoint existe mais refuse l'event, inutile d'insister.
+                return
+        except requests.RequestException:
+            return
 
 
 def _render_bot_message(msg: Dict[str, Any]) -> None:
@@ -102,6 +137,7 @@ def _transcribe_with_openai(audio_bytes: bytes, filename: str, mime_type: str) -
         raise RuntimeError("OPENAI_API_KEY n'est pas défini.")
 
     model = os.getenv("OPENAI_STT_MODEL", "whisper-1")
+    language = os.getenv("OPENAI_STT_LANGUAGE", "fr")
 
     # Support both SDKs:
     # - openai==0.28.x: openai.Audio.transcribe(...)
@@ -113,15 +149,16 @@ def _transcribe_with_openai(audio_bytes: bytes, filename: str, mime_type: str) -
     file_obj.name = filename  # type: ignore[attr-defined]
 
     if hasattr(openai, "OpenAI"):
-        client = openai.OpenAI(api_key=api_key)
-        resp = client.audio.transcriptions.create(model=model, file=file_obj)
+        OpenAIClient = cast(Any, getattr(openai, "OpenAI"))
+        client = OpenAIClient(api_key=api_key)
+        resp = client.audio.transcriptions.create(model=model, file=file_obj, language=language)
         text = getattr(resp, "text", None)
     else:
         # openai==0.28.x returns a dict-like object with a "text" field.
         try:
-            resp = openai.Audio.transcribe(model=model, file=file_obj)
+            resp = openai.Audio.transcribe(model=model, file=file_obj, language=language)
         except TypeError:
-            resp = openai.Audio.transcribe(model, file_obj)
+            resp = openai.Audio.transcribe(model, file_obj, language=language)
 
         if isinstance(resp, dict):
             text = resp.get("text")
@@ -136,10 +173,15 @@ def main() -> None:
     st.set_page_config(page_title="Rasa Chat UI", layout="centered")
     st.title("Conversation Rasa (Streamlit)")
 
-    rasa_url = st.sidebar.text_input(
-        "Rasa URL", value=_env("RASA_URL", "http://localhost:5005"))
-    sender_id = st.sidebar.text_input(
-        "Conversation ID", value=_env("RASA_SENDER_ID", "streamlit_user"))
+    # Persist settings across reruns without fighting Streamlit's widget state.
+    if "active_rasa_url" not in st.session_state:
+        st.session_state["active_rasa_url"] = _env("RASA_URL", "http://localhost:5005")
+    if "active_sender_id" not in st.session_state:
+        st.session_state["active_sender_id"] = _env("RASA_SENDER_ID", "streamlit_user")
+    if "settings_nonce" not in st.session_state:
+        st.session_state["settings_nonce"] = 0
+    if "ptt_nonce" not in st.session_state:
+        st.session_state["ptt_nonce"] = 0
 
     if "messages" not in st.session_state:
         st.session_state["messages"] = []
@@ -153,22 +195,71 @@ def main() -> None:
     ui_event = slots.get("ui_event")
     tts_last_file = slots.get("tts_last_file")
     with st.sidebar:
+        nonce = int(st.session_state.get("settings_nonce", 0))
+
+        if st.button("Reset", type="primary"):
+            # Reset côté Rasa Core pour éviter de garder un tracker/form bloqué.
+            try:
+                _reset_rasa_conversation(
+                    rasa_url=str(st.session_state.get("active_rasa_url") or _env("RASA_URL", "http://localhost:5005")),
+                    sender_id=str(st.session_state.get("active_sender_id") or _env("RASA_SENDER_ID", "streamlit_user")),
+                )
+            except Exception:
+                # Best-effort: si Rasa est down, on reset quand même l'UI.
+                pass
+
+            st.session_state["messages"] = []
+            st.session_state["last_slots"] = {}
+            st.session_state["last_audio_hash"] = None
+            st.session_state["ptt_nonce"] = int(st.session_state.get("ptt_nonce", 0)) + 1
+            # New conversation to reset server-side context as well.
+            st.session_state["active_sender_id"] = f"streamlit_{uuid.uuid4().hex[:8]}"
+
+            # Force la recréation des widgets de settings pour éviter que le front réinjecte
+            # l'ancien sender_id/rasa_url après reset.
+            st.session_state["settings_nonce"] = int(st.session_state.get("settings_nonce", 0)) + 1
+
+            rerun = getattr(st, "rerun", None)
+            if callable(rerun):
+                rerun()
+            else:
+                st.experimental_rerun()
+
+        rasa_url = st.text_input(
+            "Rasa URL",
+            value=str(st.session_state.get("active_rasa_url", "http://localhost:5005")),
+            key=f"rasa_url_input_{nonce}",
+        )
+        sender_id = st.text_input(
+            "Conversation ID",
+            value=str(st.session_state.get("active_sender_id", "streamlit_user")),
+            key=f"sender_id_input_{nonce}",
+        )
+
+        # Valeurs réellement utilisées pour contacter Rasa.
+        st.session_state["active_rasa_url"] = rasa_url
+        st.session_state["active_sender_id"] = sender_id
+
         st.caption("Slots techniques (tracker)")
         if ui_event is not None:
             st.json({"ui_event": ui_event})
         if isinstance(tts_last_file, str) and tts_last_file:
             st.code(tts_last_file)
 
-    # Voice-only input with push-to-talk (hold SPACE).
-    ptt = push_to_talk_audio(key="ptt")
-    if ptt is None:
-        return
+        st.markdown("---")
+        st.caption("Push-to-talk")
+        # Le composant est rendu dans la sidebar, mais on traite l'audio plus bas.
+        ptt = push_to_talk_audio(key=f"ptt_sidebar_{st.session_state['ptt_nonce']}")
 
     for m in st.session_state["messages"]:
         role = m.get("role", "assistant")
         content = m.get("content", "")
         with _chat_message(role):
             st.markdown(content)
+
+    if not isinstance(ptt, dict):
+        # Aucun audio reçu (composant pas encore utilisé / pas de permission / rerun)
+        return
 
     audio_b64 = ptt.get("audio_base64")
     filename = str(ptt.get("filename") or "ptt.webm")
@@ -229,6 +320,7 @@ def main() -> None:
             st.session_state["last_slots"] = slots
         except requests.RequestException:
             pass
+    
 
     # Store bot message as a compact text in history
     bot_summary = "\n\n".join(

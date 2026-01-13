@@ -4,7 +4,6 @@ from .actions import (
     ActionGenerateRecipeFromName,
     ActionTellRecipeStep,
     ActionTextToSpeech,
-    ActionUiRefreshPronouncePhrase,
 )
 
 __all__ = [
@@ -12,5 +11,4 @@ __all__ = [
     "ActionGenerateRecipeFromName",
     "ActionTellRecipeStep",
     "ActionTextToSpeech",
-    "ActionUiRefreshPronouncePhrase",
 ]

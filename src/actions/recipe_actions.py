@@ -247,7 +247,7 @@ class ActionTellRecipeStep(Action):
         else:
             idx = max(current_index, 0)
 
-        if idx >= len(steps):
+        if idx > len(steps):
             dispatcher.utter_message(
                 text="C'est terminé : tu as déjà fait toutes les étapes.")
             return [SlotSet("step_index", float(len(steps)))]

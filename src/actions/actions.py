@@ -19,12 +19,11 @@ from .recipe_actions import (
     ActionGenerateRecipeFromName,
     ActionTellRecipeStep,
 )
-from .tts_actions import ActionTextToSpeech, ActionUiRefreshPronouncePhrase
+from .tts_actions import ActionTextToSpeech
 
 __all__ = [
     "ActionGenerateRecipeFromIngredients",
     "ActionGenerateRecipeFromName",
     "ActionTellRecipeStep",
     "ActionTextToSpeech",
-    "ActionUiRefreshPronouncePhrase",
 ]

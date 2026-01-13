@@ -67,23 +67,3 @@ class ActionTextToSpeech(Action):
             dispatcher.utter_message(json_message=payload)
 
         return [SlotSet("tts_last_file", result["file_path"])]
-
-
-class ActionUiRefreshPronouncePhrase(Action):
-    def name(self) -> Text:
-        return "action_ui_refresh_pronounce_phrase"
-
-    def run(
-        self,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: Dict[Text, Any],
-    ) -> List[EventType]:
-
-        phrase = "Je pronnonce cette phrase"
-        ui_event = {
-            "type": "PRONOUNCE_PHRASE",
-            "text": phrase,
-        }
-
-        return [SlotSet("ui_event", ui_event)]
