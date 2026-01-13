@@ -45,10 +45,26 @@ def call_openai_json(prompt: str, schema: Dict[str, Any]) -> Dict[str, Any]:
 
     system = (
         "Tu es un assistant de cuisine. "
-        "Tu dois produire une sortie JSON STRICTE conforme au schéma. "
+        "Tu dois produire une sortie JSON STRICTE conforme au schéma suivant. "
         "Ne mets jamais de texte hors JSON. "
         "Si une alternative n'existe pas, mets alternative=null. "
-        "Si un ingrédient est critique, mets alternative=null."
+        "Si un ingrédient est critique, mets alternative=null.\n\n"
+        "Schéma attendu :\n"
+        '{"recipe": {"name": "nom_recette", "ingredients": [{"name": "nom_ingredient", "quantity": "quantité", "critical": true/false, "alternative": "alternative ou null"}], '
+        '"instructions": ["étape 1", "étape 2"], "serving_suggestions": ["suggestion"], '
+        '"preparation_time": "X minutes", "cooking_time": "X minutes", "total_time": "X minutes"}}\n\n'
+        "Exemple concret :\n"
+        '{"recipe": {"name": "crêpes", "ingredients": [{"name": "farine", "quantity": "250g", "critical": true, "alternative": null}, '
+        '{"name": "oeufs", "quantity": "3", "critical": true, "alternative": null}, {"name": "lait", "quantity": "500ml", "critical": true, "alternative": null}, '
+        '{"name": "beurre", "quantity": "50g", "critical": false, "alternative": "huile"}, {"name": "sucre", "quantity": "30g", "critical": false, "alternative": "miel"}, '
+        '{"name": "sel", "quantity": "une pincée", "critical": false, "alternative": null}], '
+        '"instructions": ["Dans un saladier, mélanger la farine et le sel.", "Faire un puits au centre et ajouter les oeufs.", '
+        '"Incorporer progressivement le lait tout en fouettant pour éviter les grumeaux.", '
+        '"Ajouter le beurre fondu et le sucre, puis mélanger jusqu\'à obtenir une pâte lisse.", "Laisser reposer la pâte pendant 30 minutes.", '
+        '"Chauffer une poêle antiadhésive et y verser une louche de pâte.", "Cuire chaque crêpe environ 1 à 2 minutes de chaque côté jusqu\'à ce qu\'elle soit dorée.", '
+        '"Répéter l\'opération jusqu\'à épuisement de la pâte."], '
+        '"serving_suggestions": ["Servir avec du sucre, de la confiture, du chocolat fondu ou des fruits."], '
+        '"preparation_time": "10 minutes", "cooking_time": "20 minutes", "total_time": "30 minutes"}}'
     )
 
     # openai==0.28.1 doesn't support `response_format`/`json_schema`.

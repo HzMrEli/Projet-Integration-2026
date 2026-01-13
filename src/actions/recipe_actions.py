@@ -76,7 +76,7 @@ class ActionGenerateRecipeFromIngredients(Action):
         formatted_ingredients = ", ".join(ingredients_str_list)
 
         return [
-            SlotSet("nom_recette", data["recipe"].get("title")),
+            SlotSet("nom_recette", data["recipe"].get("name")),
             SlotSet("formatted_ingredients", formatted_ingredients),
             SlotSet("recipe_card", data),
             SlotSet("recipe_json", json.dumps(data, ensure_ascii=False)),
