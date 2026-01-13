@@ -43,6 +43,10 @@ slots:
     influence_conversation: true
     auto_fill: true
 
+  formatted_ingredients:
+    type: text
+    influence_conversation: false
+
   contraintes:
     type: text
     influence_conversation: true
@@ -113,7 +117,10 @@ responses:
     - text: "Quels ingrédients avez-vous ?"
 
   utter_recipe_ingredients:
-    - text: "Très bien, je vous propose de faire le plat {nom_recette} avec {liste_ingredients}. "
+    - text: "Très bien, je vous propose de faire le plat {nom_recette}. Pour ça il vous faudra {formatted_ingredients}. "
+
+  utter_recipe_found_details:
+    - text: "Voici la recette de {nom_recette}. Il vous faudra : {formatted_ingredients}."
 
   utter_ask_full_or_step:
     - text: "Voulez-vous la recette complète, ou un guidage étape par étape ?"

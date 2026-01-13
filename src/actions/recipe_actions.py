@@ -23,6 +23,7 @@ class ActionGenerateRecipeFromIngredients(Action):
     ) -> List[Dict[Text, Any]]:
 
         ingredients = tracker.get_slot("liste_ingredients")
+        
         contraintes = tracker.get_slot("contraintes")
         temps_max = tracker.get_slot("temps_max")
         nb_personnes = tracker.get_slot("nb_personnes")
@@ -53,9 +54,30 @@ class ActionGenerateRecipeFromIngredients(Action):
         steps = recipe.get("steps") if isinstance(recipe, dict) else None
         if not isinstance(steps, list):
             steps = []
+        # Construction de formatted_ingredients pour l'affichage
+        ingredients_data = recipe.get("ingredients", [])
+        ingredients_str_list = []
+        for ing in ingredients_data:
+            i_name = ing.get("name", "")
+            i_qty = ing.get("quantity")
+            i_unit = ing.get("unit")
+            
+            # Format simple "quantity unit name" ou juste "name"
+            if i_qty:
+                if i_unit:
+                    item_str = f"{i_qty} {i_unit} {i_name}"
+                else:
+                    item_str = f"{i_qty} {i_name}"
+            else:
+                item_str = i_name
+            
+            ingredients_str_list.append(item_str.strip())
+
+        formatted_ingredients = ", ".join(ingredients_str_list)
 
         return [
             SlotSet("nom_recette", data["recipe"].get("title")),
+            SlotSet("formatted_ingredients", formatted_ingredients),
             SlotSet("recipe_card", data),
             SlotSet("recipe_json", json.dumps(data, ensure_ascii=False)),
             SlotSet("recipe_steps", steps),
@@ -117,8 +139,35 @@ class ActionGenerateRecipeFromName(Action):
         if not isinstance(steps, list):
             steps = []
 
+        # Construction de formatted_ingredients pour l'affichage
+        ingredients_data = recipe.get("ingredients", [])
+        ingredients_str_list = []
+        for ing in ingredients_data:
+            i_name = ing.get("name", "")
+            i_qty = ing.get("quantity")
+            i_unit = ing.get("unit")
+            
+            # Format simple "quantity unit name" ou juste "name"
+            if i_qty:
+                if i_unit:
+                    item_str = f"{i_qty} {i_unit} {i_name}"
+                else:
+                    item_str = f"{i_qty} {i_name}"
+            else:
+                item_str = i_name
+            
+            ingredients_str_list.append(item_str.strip())
+
+        formatted_ingredients = ""
+        if ingredients_str_list:
+            if len(ingredients_str_list) == 1:
+                formatted_ingredients = ingredients_str_list[0]
+            else:
+                formatted_ingredients = ", ".join(ingredients_str_list[:-1]) + " et " + ingredients_str_list[-1]
+
         return [
             SlotSet("nom_recette", data["recipe"].get("name")),
+            SlotSet("formatted_ingredients", formatted_ingredients),
             SlotSet("recipe_card", data),
             SlotSet("recipe_json", json.dumps(data, ensure_ascii=False)),
             SlotSet("recipe_steps", steps),

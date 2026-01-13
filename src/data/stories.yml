@@ -151,6 +151,8 @@ stories:
       - action: action_text_to_speech
       - intent: start_recipe_by_name
       - action: action_generate_recipe_from_name
+      - action: utter_recipe_found_details
+      - action: action_text_to_speech
       - action: utter_ask_validate_recipe
       - action: action_text_to_speech
 
@@ -158,6 +160,8 @@ stories:
     steps:
       - intent: start_recipe_by_name
       - action: action_generate_recipe_from_name
+      - action: utter_recipe_found_details
+      - action: action_text_to_speech
       - action: utter_ask_validate_recipe
       - action: action_text_to_speech
       - intent: affirm
