@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from contextlib import contextmanager
 import hashlib
 import io
 import os
@@ -9,7 +10,19 @@ from typing import Any, Dict, List, Optional
 import requests
 import streamlit as st
 
-from ui.ptt_component import push_to_talk_audio
+from ptt_component import push_to_talk_audio
+
+
+@contextmanager
+def _chat_message(role: str):
+    chat_message = getattr(st, "chat_message", None)
+    if callable(chat_message):
+        with chat_message(role):
+            yield
+    else:
+        with st.container():
+            st.markdown(f"**{role}**")
+            yield
 
 
 def _env(name: str, default: str) -> str:
@@ -136,7 +149,7 @@ def main() -> None:
     for m in st.session_state["messages"]:
         role = m.get("role", "assistant")
         content = m.get("content", "")
-        with st.chat_message(role):
+        with _chat_message(role):
             st.markdown(content)
 
     audio_b64 = ptt.get("audio_base64")
@@ -156,7 +169,7 @@ def main() -> None:
         return
     st.session_state["last_audio_hash"] = audio_hash
 
-    with st.chat_message("user"):
+    with _chat_message("user"):
         try:
             with st.spinner("Transcription…"):
                 user_text = _transcribe_with_openai(
@@ -169,7 +182,7 @@ def main() -> None:
         st.session_state["messages"].append(
             {"role": "user", "content": user_text})
 
-    with st.chat_message("assistant"):
+    with _chat_message("assistant"):
         try:
             responses = _post_rasa_message(
                 rasa_url=rasa_url, sender_id=sender_id, message=user_text)

@@ -1072,7 +1072,7 @@ requires-dist = [
     { name = "rasa", specifier = "==2.8.0" },
     { name = "rasa-sdk", specifier = "==2.8.6" },
     { name = "requests", specifier = ">=2.32.4" },
-    { name = "streamlit", specifier = "<=1.40.1" },
+    { name = "streamlit", specifier = "<1.23.0" },
 ]
 
 [[package]]
@@ -1873,7 +1873,7 @@ wheels = [
 
 [[package]]
 name = "streamlit"
-version = "1.23.0"
+version = "1.22.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "altair" },
@@ -1902,9 +1902,9 @@ dependencies = [
     { name = "validators" },
     { name = "watchdog", marker = "sys_platform != 'darwin'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f3/50/ece95d3cd00fe3f193f9f7264f3fca7fd9eaed3ef6733842690392e4bc67/streamlit-1.23.0.tar.gz", hash = "sha256:6d9304df669bfacf50763c8a701fcde24d64ce2574bd36a802929c42d658fef8", size = 8603596, upload-time = "2023-06-01T19:34:04.163Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/6a/59/55d4984ef6d3aeed90b5f354fd5c0cd99aaa5aa776da19efd6e813869e36/streamlit-1.22.0.tar.gz", hash = "sha256:5bef9bf8deef32814d9565c9df48331e6357eb0b90dabc3ec4f53c44fb34fc73", size = 8584701, upload-time = "2023-04-27T18:42:03.551Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7e/ee/dff6d8ed0d636d18a4c7baffec99a5860f7a32cf9bcf71d1e453ec8e5b30/streamlit-1.23.0-py2.py3-none-any.whl", hash = "sha256:efad9a993bdf8a554df6637cddbd076145ab3acfe6d7bf260bfdb0c75c1dbca6", size = 8867431, upload-time = "2023-06-01T19:33:59.851Z" },
+    { url = "https://files.pythonhosted.org/packages/b1/26/2add66d2e2febd6b05efd48ce02fc2d979d805b844143f2fa9fd7e867ade/streamlit-1.22.0-py2.py3-none-any.whl", hash = "sha256:520dd9b9e6efb559b5a9a22feadb48b1e6f0340ec83da3514810059fdecd4167", size = 8865046, upload-time = "2023-04-27T18:41:59.679Z" },
 ]
 
 [[package]]
