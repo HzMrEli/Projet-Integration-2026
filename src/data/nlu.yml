@@ -42,19 +42,62 @@ nlu:
 
   - intent: start_recipe_by_name
     examples: |
-      - je veux faire une carbonara
-      - je veux faire des crêpes
-      - recette de lasagnes
-      - montre-moi la recette de soupe à la tomate
+      - je veux faire une [carbonara](nom_recette)
+      - je veux faire des [crêpes](nom_recette)
+      - recette de [lasagnes](nom_recette)
+      - montre-moi la recette de [soupe à la tomate](nom_recette)
       - je veux cuisiner une [omelette](nom_recette)
       - recette de [poulet au curry](nom_recette)
       - j'aimerais faire des [spaghetti bolognaise](nom_recette)
       - comment faire des [ratatouilles](nom_recette)
       - donne-moi la recette des [crêpes](nom_recette)
+      - je cherche la recette de la [quiche lorraine](nom_recette)
+      - je voudrais la recette du [gratin dauphinois](nom_recette)
+      - tu peux me donner la recette du [risotto aux champignons](nom_recette)
+      - je veux préparer un [chili con carne](nom_recette)
+      - comment préparer un [curry de légumes](nom_recette)
+      - fais-moi une [salade niçoise](nom_recette)
+      - j'ai envie d'un [boeuf bourguignon](nom_recette)
+      - je veux cuisiner une [blanquette de veau](nom_recette)
+      - recette de [poulet basquaise](nom_recette)
+      - donne-moi la recette de [coq au vin](nom_recette)
+      - je veux faire un [hachis parmentier](nom_recette)
+      - comment faire une [soupe à l'oignon](nom_recette)
+      - recette de [velouté de potiron](nom_recette)
+      - je veux la recette du [taboulé](nom_recette)
+      - montre-moi la recette du [couscous](nom_recette)
+      - je voudrais cuisiner un [tajine de poulet au citron](nom_recette)
+      - je veux faire une [paella](nom_recette)
+      - recette de [pizza margherita](nom_recette)
+      - je veux une [pizza 4 fromages](nom_recette)
+      - tu connais la recette des [gnocchis à la crème](nom_recette)
+      - j'aimerais faire des [nuggets de poulet](nom_recette)
+      - donne-moi la recette des [falafels](nom_recette)
+      - comment cuisiner un [dhal de lentilles](nom_recette)
+      - je veux la recette des [tacos](nom_recette)
+      - je veux faire des [wraps au poulet](nom_recette)
+      - recette de [burger maison](nom_recette)
+      - je veux cuisiner un [ramen](nom_recette)
+      - je veux préparer un [pad thaï](nom_recette)
+      - recette de [pho vietnamien](nom_recette)
+      - je veux faire des [makis](nom_recette)
+      - montre-moi la recette des [sushis](nom_recette)
+      - donne-moi une recette de [tiramisu](nom_recette)
+      - je veux faire une [mousse au chocolat](nom_recette)
+      - recette de [crème brûlée](nom_recette)
+      - je veux un [gâteau au yaourt](nom_recette)
+      - comment faire un [brownie](nom_recette)
+      - recette de [cookies](nom_recette)
+      - je veux faire une [tarte aux pommes](nom_recette)
+      - je voudrais une [tarte au citron meringuée](nom_recette)
+      - montre-moi la recette du [banana bread](nom_recette)
+      - je veux la recette des [pancakes](nom_recette)
+      - je veux faire des [gaufres](nom_recette)
+      - recette de [madeleines](nom_recette)
+      - je veux la recette des [financiers](nom_recette)
 
   - intent: add_ingredient
     examples: |
-      - j'ai [des œufs, du lait, de la farine, du beurre, du sucre et des pommes](liste_ingredients)
       - j'ai des [œufs](liste_ingredients)
       - j'ai des [oeufs](liste_ingredients)
       - j'ai des [œufs](liste_ingredients) et du [lait](liste_ingredients)
@@ -139,9 +182,9 @@ nlu:
       - j'ai une brique de [lait](liste_ingredients)
       - j'ai un peu de [beurre](liste_ingredients)
       - j'ai un sachet de [farine](liste_ingredients)
-      - j'ai [sucre](liste_ingredients) + [farine](liste_ingredients) + [œufs](liste_ingredients)
-      - j'ai [huile](liste_ingredients), [vinaigre](liste_ingredients) et [moutarde](liste_ingredients)
-      - j'ai [huile d'olive](liste_ingredients) et [vinaigre balsamique](liste_ingredients)
+      - j'ai du [sucre](liste_ingredients) + [farine](liste_ingredients) + [œufs](liste_ingredients)
+      - j'ai de l'[huile](liste_ingredients), du [vinaigre](liste_ingredients) et de la [moutarde](liste_ingredients)
+      - j'ai de l'[huile d'olive](liste_ingredients) et du [vinaigre balsamique](liste_ingredients)
       - j'ai des [olives](liste_ingredients)
       - j'ai de la [sauce soja](liste_ingredients)
       - j'ai du [ketchup](liste_ingredients)
@@ -154,7 +197,7 @@ nlu:
       - j'ai une [saucisse](liste_ingredients)
       - j'ai des [steak](liste_ingredients)
       - j'ai du [tofu](liste_ingredients) et des [pois chiches](liste_ingredients)
-      - j'ai [lentilles](liste_ingredients), [haricots blancs](liste_ingredients) et [haricots rouges](liste_ingredients)
+      - j'ai des [lentilles](liste_ingredients), des [haricots blancs](liste_ingredients) et des [haricots rouges](liste_ingredients)
       - il me reste une [échalote](liste_ingredients)
       - il me reste une [echalote](liste_ingredients)
       - j'ai un [poireau](liste_ingredients)
@@ -360,6 +403,113 @@ nlu:
       - farine de maïs
       - farine de mais
 
+  - lookup: nom_recette
+    examples: |
+      - carbonara
+      - spaghetti bolognaise
+      - lasagnes
+      - ratatouille
+      - soupe à la tomate
+      - soupe à l'oignon
+      - soupe de légumes
+      - velouté de potiron
+      - gratin dauphinois
+      - quiche lorraine
+      - omelette
+      - croque-monsieur
+      - croque monsieur
+      - hachis parmentier
+      - boeuf bourguignon
+      - bœuf bourguignon
+      - blanquette de veau
+      - coq au vin
+      - poulet basquaise
+      - poulet au curry
+      - curry de légumes
+      - curry de poulet
+      - poulet tikka masala
+      - butter chicken
+      - poulet au beurre
+      - chili con carne
+      - chili sin carne
+      - risotto aux champignons
+      - risotto au parmesan
+      - paella
+      - couscous
+      - couscous royal
+      - taboulé
+      - salade niçoise
+      - salade césar
+      - salade grecque
+      - tajine de poulet au citron
+      - tajine d'agneau
+      - dhal de lentilles
+      - shakshuka
+      - pizza margherita
+      - pizza 4 fromages
+      - pizza quatre fromages
+      - burger maison
+      - tacos
+      - wraps au poulet
+      - fajitas
+      - enchiladas
+      - nuggets de poulet
+      - poisson pané
+      - quiche aux légumes
+      - tarte salée
+      - tarte aux poireaux
+      - gratin de courgettes
+      - gratin de pâtes
+      - gratin de pommes de terre
+      - gratin de chou-fleur
+      - purée maison
+      - soupe miso
+      - ramen
+      - pad thaï
+      - pho vietnamien
+      - bobun
+      - nems
+      - samoussas
+      - makis
+      - sushis
+      - poké bowl
+      - ceviche
+      - guacamole
+      - houmous
+      - falafels
+      - salade de pâtes
+      - salade de riz
+      - pâtes au pesto
+      - pates au pesto
+      - pâtes à la crème
+      - pates a la creme
+      - gnocchis à la crème
+      - gnocchis
+      - pâtes au saumon
+      - pates au saumon
+      - gratin de coquillettes
+      - pâtes à la carbonara
+      - pates a la carbonara
+      - crêpes
+      - crepes
+      - pancakes
+      - gaufres
+      - waffles
+      - tiramisu
+      - mousse au chocolat
+      - crème brûlée
+      - creme brulee
+      - tarte aux pommes
+      - tarte au citron meringuée
+      - tarte au citron
+      - banana bread
+      - brownie
+      - cookies
+      - gâteau au yaourt
+      - gateau au yaourt
+      - madeleines
+      - financiers
+
   - intent: done_ingredients
     examples: |
       - c'est tout
@@ -425,13 +575,6 @@ nlu:
       - continue maintenant
       - je suis de retour
       - continuons
-
-  - intent: slow_down
-    examples: |
-      - plus lentement
-      - parle plus lentement
-      - plus lentement s'il te plaît
-      - ralentis
 
   - intent: ask_definition
     examples: |

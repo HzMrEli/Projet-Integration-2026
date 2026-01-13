@@ -76,12 +76,8 @@ Intentions:
 
 - Setup la clé API d'OpenAI avec : $env:OPENAI_API_KEY = "YOUR_KEY"
 
-- Lancer RASA dans un premier Terminal : `rasa run --enable-api`
+- Lancer RASA dans un premier PowerShell : `rasa run --enable-api`
 
-- Lancer le serveur d'actions dans un autre Terminal : `rasa run actions`
-
-- Si tu ne lances pas depuis le dossier `src`, passe le fichier endpoints :
-  - depuis la racine du repo : `rasa run --enable-api --endpoints src/endpoints.yml`
-  - depuis `src` : `rasa run --enable-api --endpoints endpoints.yml`
+- Lancer le serveur d'actions dans un autre PowerShell : `rasa run actions`
 
 - Lancer streamlit (interface graphique) dans un powershell : `py -m streamlit run ui/streamlit_app.py`
