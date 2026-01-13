@@ -39,6 +39,30 @@ rules:
       - action: action_text_to_speech
 
   # --------------------------------------------------------------------------
+  # Critical transition: user refuses the proposed recipe
+  # --------------------------------------------------------------------------
+  - rule: Après proposition de recette (ingrédients) + non -> proposer une autre recette
+    steps:
+      - action: utter_recipe_ingredients
+      - action: action_text_to_speech
+      - action: action_listen
+      - intent: deny
+      - action: utter_propose_another_recipe
+      - action: action_text_to_speech
+      - action: action_generate_recipe_from_ingredients
+      - action: utter_recipe_ingredients
+      - action: action_text_to_speech
+
+  - rule: Après proposition de recette (nom) + non -> demander un autre nom de recette
+    steps:
+      - action: utter_recipe_found_details
+      - action: action_text_to_speech
+      - action: action_listen
+      - intent: deny
+      - action: utter_ask_other_recipe_name
+      - action: action_text_to_speech
+
+  # --------------------------------------------------------------------------
   # Choice after utter_ask_full_or_step
   # --------------------------------------------------------------------------
   - rule: Choix guidage étape par étape

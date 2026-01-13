@@ -33,6 +33,9 @@ intents:
 entities:
   - liste_ingredients
   - nom_recette
+  - temps_max
+  - nb_personnes
+  - difficulte
 
 slots:
   # --- Slots attendus par src/actions/recipe_actions.py ---
@@ -120,6 +123,9 @@ responses:
 
   utter_recipe_found_details:
     - text: "Voici la recette de {nom_recette}. Il vous faudra : {formatted_ingredients}. Est-ce que cela vous convient ?"
+
+  utter_ask_other_recipe_name:
+    - text: "D'accord. Quelle autre recette voulez-vous ? "
 
   utter_ask_full_or_step:
     - text: "Voulez-vous la recette complète, ou un guidage étape par étape ?"

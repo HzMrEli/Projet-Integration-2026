@@ -156,6 +156,20 @@ stories:
       - action: action_tell_recipe_step
       - action: action_text_to_speech
 
+  - story: recette par nom -> refusée -> demander autre nom -> reproposer
+    steps:
+      - intent: start_recipe_by_name
+      - action: action_generate_recipe_from_name
+      - action: utter_recipe_found_details
+      - action: action_text_to_speech
+      - intent: deny
+      - action: utter_ask_other_recipe_name
+      - action: action_text_to_speech
+      - intent: start_recipe_by_name
+      - action: action_generate_recipe_from_name
+      - action: utter_recipe_found_details
+      - action: action_text_to_speech
+
   - story: guidage étape par étape
     steps:
       - intent: start_step_by_step

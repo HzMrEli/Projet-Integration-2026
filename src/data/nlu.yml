@@ -64,6 +64,21 @@ nlu:
       - avec ce que j'ai sous la main, tu proposes quoi ?
       - je veux une idée de plat avec mon frigo
       - je veux une recette faisable avec ce que j'ai
+      - propose une recette en moins de [30](temps_max) minutes
+      - je veux cuisiner en moins de [20](temps_max) minutes
+      - j'ai besoin d'une recette rapide (max [15](temps_max) minutes)
+      - je veux un truc [rapide](temps_max)
+      - une recette [vite](temps_max) s'il te plaît
+      - je cuisine en mode [rapide](temps_max)
+      - j'ai pas le temps, une recette [express](temps_max)
+      - j'ai pas beaucoup de temps, un plat [rapide](temps_max)
+      - je suis pressé, fais-moi un truc [express](temps_max)
+      - je suis pressée, une idée [rapide](temps_max)
+      - une recette facile pour [2](nb_personnes) personnes
+      - une idée pour [4](nb_personnes) personnes
+      - une recette niveau [débutant](difficulte)
+      - un plat niveau [intermédiaire](difficulte)
+      - une recette plutôt [avancé](difficulte)
 
   - intent: start_recipe_by_name
     examples: |
@@ -120,6 +135,15 @@ nlu:
       - je veux faire des [gaufres](nom_recette)
       - recette de [madeleines](nom_recette)
       - je veux la recette des [financiers](nom_recette)
+      - je veux faire une [carbonara](nom_recette) pour [2](nb_personnes) personnes
+      - recette de [lasagnes](nom_recette) pour [6](nb_personnes) personnes
+      - je veux faire un [risotto aux champignons](nom_recette) en moins de [35](temps_max) minutes
+      - montre-moi la recette de [poulet au curry](nom_recette) en moins de [25](temps_max) minutes
+      - je veux une [omelette](nom_recette) [rapide](temps_max)
+      - une [carbonara](nom_recette) en mode [express](temps_max)
+      - je veux des [crêpes](nom_recette) [vite](temps_max)
+      - je veux une [omelette](nom_recette) niveau [débutant](difficulte)
+      - recette de [pad thaï](nom_recette) niveau [intermédiaire](difficulte)
 
   - intent: add_ingredient
     examples: |
@@ -265,6 +289,52 @@ nlu:
       - dans mon frigo : du [poulet](liste_ingredients), de la [salade](liste_ingredients), des [tomates](liste_ingredients)
       - j'ai aussi du [riz](liste_ingredients) et du [poulet](liste_ingredients)
       - il me reste des [tomates](liste_ingredients) et une [salade](liste_ingredients)
+      - j'ai du [poulet](liste_ingredients) et du [riz](liste_ingredients) pour [2](nb_personnes) personnes
+      - j'ai du [thon](liste_ingredients) et des [pâtes](liste_ingredients), je veux un truc en moins de [20](temps_max) minutes
+      - j'ai des [œufs](liste_ingredients) et du [lait](liste_ingredients), recette niveau [débutant](difficulte)
+      - j'ai des [tomates](liste_ingredients) et des [oignons](liste_ingredients), plutôt niveau [intermédiaire](difficulte)
+      - j'ai du [poulet](liste_ingredients) des [tomates](liste_ingredients) et de la [salade](liste_ingredients) en moins de [15](temps_max) minutes
+
+  - synonym: "débutant"
+    examples: |
+      - facile
+      - débutante
+      - debutant
+      - debutante
+
+  - synonym: "intermédiaire"
+    examples: |
+      - moyen
+      - moyenne
+      - intermédiaire
+      - intermediaire
+
+  - synonym: "avancé"
+    examples: |
+      - difficile
+      - avancé
+      - avance
+      - expert
+      - confirmé
+
+  - lookup: difficulte
+    examples: |
+      - débutant
+      - intermédiaire
+      - avancé
+
+  - synonym: "15"
+    examples: |
+      - rapide
+      - rapidement
+      - vite
+      - express
+      - en express
+      - en vitesse
+      - pressé
+      - pressée
+      - j'ai pas le temps
+      - pas le temps
 
   - intent: done_ingredients
     examples: |
