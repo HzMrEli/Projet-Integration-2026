@@ -1,4 +1,4 @@
-$OPENAI_API_KEY = "TA_CLE_OPENAI_ICI"
+$OPENAI_API_KEY = "azedzads"
 
 $root = $PSScriptRoot
 $venv = "$root\.venv\Scripts\Activate.ps1"
