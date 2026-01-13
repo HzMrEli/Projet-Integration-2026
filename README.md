@@ -46,7 +46,6 @@ Projet-Integration-2026/
 │   └── streamlit_app.py    # Point d'entrée de l'interface graphique
 ├── start_rasa_with_api.ps1 # Script de démarrage automatisé (Windows)
 ├── pyproject.toml          # Fichier de configuration du projet et dépendances
-└── main.py                 # Script utilitaire d'entrée
 ```
 
 ## Installation
