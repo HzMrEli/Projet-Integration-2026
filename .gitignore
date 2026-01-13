@@ -20,3 +20,4 @@ models/
 PROJET_Intégration_Interaction_2025_2026_final.pdf
 **/PROJET_Intégration_Interaction_2025_2026_final.pdf
 src/tests/test_local.py
+start_rasa_with_api.ps1
