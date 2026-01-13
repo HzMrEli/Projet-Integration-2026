@@ -30,7 +30,7 @@ def _env(name: str, default: str) -> str:
     return value if value else default
 
 
-def _post_rasa_message(rasa_url: str, sender_id: str, message: str, timeout_s: float = 20.0) -> List[Dict[str, Any]]:
+def _post_rasa_message(rasa_url: str, sender_id: str, message: str, timeout_s: float = 60.0) -> List[Dict[str, Any]]:
     url = f"{rasa_url.rstrip('/')}/webhooks/rest/webhook"
     resp = requests.post(
         url,

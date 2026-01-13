@@ -74,10 +74,6 @@ Intentions:
 
 - Train le model rasa avec: `rasa train`
 
-- Setup la clé API d'OpenAI avec : $env:OPENAI_API_KEY = "YOUR_KEY"
+- Dans le script PowerShell `start_rasa_with_api.ps1` à la racine du projet, ajouter votre clé OpenAI à la place de `TA_CLE_OPENAI_ICI` 
 
-- Lancer RASA dans un premier PowerShell : `rasa run --enable-api`
-
-- Lancer le serveur d'actions dans un autre PowerShell : `rasa run actions`
-
-- Lancer streamlit (interface graphique) dans un powershell : `py -m streamlit run ui/streamlit_app.py`
+- Lancer RASA + Interface graphique: `.\start_rasa_with_api.ps1`
