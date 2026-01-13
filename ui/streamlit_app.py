@@ -43,7 +43,8 @@ def _get_rasa_tracker_slots(rasa_url: str, sender_id: str, timeout_s: float = 10
 
 def _render_bot_message(msg: Dict[str, Any]) -> None:
     text = msg.get("text")
-    custom = msg.get("custom")  # json_message from Rasa becomes "custom" in REST channel
+    # json_message from Rasa becomes "custom" in REST channel
+    custom = msg.get("custom")
     image = msg.get("image")
 
     if isinstance(text, str) and text.strip():
@@ -59,7 +60,7 @@ def _render_bot_message(msg: Dict[str, Any]) -> None:
 
 def _transcribe_with_openai(audio_bytes: bytes, filename: str, mime_type: str) -> str:
     try:
-        from openai import OpenAI
+        import openai
     except ModuleNotFoundError as exc:
         raise RuntimeError(
             "La librairie 'openai' n'est pas installée. Installe-la puis relance l'UI."
@@ -70,18 +71,31 @@ def _transcribe_with_openai(audio_bytes: bytes, filename: str, mime_type: str) -
         raise RuntimeError("OPENAI_API_KEY n'est pas défini.")
 
     model = os.getenv("OPENAI_STT_MODEL", "whisper-1")
-    client = OpenAI(api_key=api_key)
+
+    # Support both SDKs:
+    # - openai==0.28.x: openai.Audio.transcribe(...)
+    # - openai>=1.x: client = openai.OpenAI(...); client.audio.transcriptions.create(...)
+    openai.api_key = api_key
 
     # OpenAI expects a file-like object.
     file_obj = io.BytesIO(audio_bytes)
     file_obj.name = filename  # type: ignore[attr-defined]
 
-    resp = client.audio.transcriptions.create(
-        model=model,
-        file=file_obj,
-    )
+    if hasattr(openai, "OpenAI"):
+        client = openai.OpenAI(api_key=api_key)
+        resp = client.audio.transcriptions.create(model=model, file=file_obj)
+        text = getattr(resp, "text", None)
+    else:
+        # openai==0.28.x returns a dict-like object with a "text" field.
+        try:
+            resp = openai.Audio.transcribe(model=model, file=file_obj)
+        except TypeError:
+            resp = openai.Audio.transcribe(model, file_obj)
 
-    text = getattr(resp, "text", None)
+        if isinstance(resp, dict):
+            text = resp.get("text")
+        else:
+            text = getattr(resp, "text", None)
     if not isinstance(text, str) or not text.strip():
         raise RuntimeError("Transcription STT vide.")
     return text.strip()
@@ -91,8 +105,10 @@ def main() -> None:
     st.set_page_config(page_title="Rasa Chat UI", layout="centered")
     st.title("Conversation Rasa (Streamlit)")
 
-    rasa_url = st.sidebar.text_input("Rasa URL", value=_env("RASA_URL", "http://localhost:5005"))
-    sender_id = st.sidebar.text_input("Conversation ID", value=_env("RASA_SENDER_ID", "streamlit_user"))
+    rasa_url = st.sidebar.text_input(
+        "Rasa URL", value=_env("RASA_URL", "http://localhost:5005"))
+    sender_id = st.sidebar.text_input(
+        "Conversation ID", value=_env("RASA_SENDER_ID", "streamlit_user"))
 
     if "messages" not in st.session_state:
         st.session_state["messages"] = []
@@ -143,17 +159,20 @@ def main() -> None:
     with st.chat_message("user"):
         try:
             with st.spinner("Transcription…"):
-                user_text = _transcribe_with_openai(audio_bytes, filename=filename, mime_type=mime_type)
+                user_text = _transcribe_with_openai(
+                    audio_bytes, filename=filename, mime_type=mime_type)
         except Exception as exc:
             st.error(f"Erreur STT: {exc}")
             return
 
         st.markdown(user_text)
-        st.session_state["messages"].append({"role": "user", "content": user_text})
+        st.session_state["messages"].append(
+            {"role": "user", "content": user_text})
 
     with st.chat_message("assistant"):
         try:
-            responses = _post_rasa_message(rasa_url=rasa_url, sender_id=sender_id, message=user_text)
+            responses = _post_rasa_message(
+                rasa_url=rasa_url, sender_id=sender_id, message=user_text)
         except requests.RequestException as exc:
             st.error(f"Erreur d'appel Rasa: {exc}")
             return
@@ -174,14 +193,17 @@ def main() -> None:
 
         # Update tracker slots (for ui_event / tts_last_file)
         try:
-            slots = _get_rasa_tracker_slots(rasa_url=rasa_url, sender_id=sender_id)
+            slots = _get_rasa_tracker_slots(
+                rasa_url=rasa_url, sender_id=sender_id)
             st.session_state["last_slots"] = slots
         except requests.RequestException:
             pass
 
     # Store bot message as a compact text in history
-    bot_summary = "\n\n".join(rendered_text_parts) if rendered_text_parts else "(aucun message)"
-    st.session_state["messages"].append({"role": "assistant", "content": bot_summary})
+    bot_summary = "\n\n".join(
+        rendered_text_parts) if rendered_text_parts else "(aucun message)"
+    st.session_state["messages"].append(
+        {"role": "assistant", "content": bot_summary})
 
 
 if __name__ == "__main__":

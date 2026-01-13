@@ -125,7 +125,7 @@ def call_openai_tts(text: str) -> Dict[str, str]:
     filename = f"tts_{uuid.uuid4().hex}.{audio_format}"
     file_path = out_dir / filename
 
-    client = OpenAI(api_key=api_key)
+    client = openai.api_key = api_key
 
     response = client.audio.speech.create(
         model=model,
