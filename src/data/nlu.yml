@@ -8,6 +8,11 @@ nlu:
       - salut
       - bon matin
       - bonsoir
+      - coucou
+      - hello
+      - salut à toi
+      - bonjour assistant
+      - yo
 
   - intent: goodbye
     examples: |
@@ -15,6 +20,9 @@ nlu:
       - à bientôt
       - à plus tard
       - bonne journée
+      - merci, au revoir
+      - on se reparle plus tard
+      - ciao
 
   - intent: affirm
     examples: |
@@ -24,6 +32,14 @@ nlu:
       - correct
       - ok
       - d'accord
+      - parfait
+      - ça me va
+      - oui.
+      - ok super
+      - ça marche
+      - vas-y
+      - oui merci
+      - bien sûr
 
   - intent: deny
     examples: |
@@ -31,6 +47,11 @@ nlu:
       - nan
       - pas vraiment
       - jamais
+      - non merci
+      - non.
+      - pas du tout
+      - je préfère autre chose
+      - ça ne me va pas
 
   - intent: start_fridge_mode
     examples: |
@@ -39,6 +60,10 @@ nlu:
       - suggère-moi des recettes avec le frigo
       - utilise mes ingrédients du frigo
       - qu'est-ce que je peux faire maintenant
+      - j'ai des ingrédients, propose-moi une recette
+      - avec ce que j'ai sous la main, tu proposes quoi ?
+      - je veux une idée de plat avec mon frigo
+      - je veux une recette faisable avec ce que j'ai
 
   - intent: start_recipe_by_name
     examples: |
@@ -235,6 +260,22 @@ nlu:
       - voici ce que j'ai : [poulet](liste_ingredients) / [riz](liste_ingredients) / [carottes](liste_ingredients) / [oignons](liste_ingredients)
       - dans mon frigo il reste du [saumon](liste_ingredients)
       - dans mon placard il reste du [quinoa](liste_ingredients)
+      - j'ai du [poulet](liste_ingredients), de la [salade](liste_ingredients) et des [tomates](liste_ingredients)
+      - j'ai du [poulet](liste_ingredients) de la [salade](liste_ingredients) des [tomates](liste_ingredients)
+      - dans mon frigo : du [poulet](liste_ingredients), de la [salade](liste_ingredients), des [tomates](liste_ingredients)
+      - j'ai aussi du [riz](liste_ingredients) et du [poulet](liste_ingredients)
+      - il me reste des [tomates](liste_ingredients) et une [salade](liste_ingredients)
+
+  - intent: done_ingredients
+    examples: |
+      - c'est tout
+      - c'est bon
+      - j'ai fini
+      - j'ai tout dit
+      - je n'ai rien d'autre
+      - voilà
+      - c'est tout ce que j'ai
+      - on peut y aller
 
   - synonym: "œufs"
     examples: |
@@ -519,7 +560,14 @@ nlu:
       - la deuxième
       - la troisième
       - je choisis l'option 2
-      - faisons une carbonara
+      - je prends la 1
+      - je prends la 2
+      - je prends la 3
+      - je choisis la première option
+      - je choisis la deuxième option
+      - je choisis la troisième option
+      - l'option numéro 2
+      - la recette 2
 
   - intent: ask_full_recipe
     examples: |
@@ -527,6 +575,13 @@ nlu:
       - donne-moi toute la recette
       - liste toutes les étapes
       - montre tout d'un coup
+      - je veux la recette complète
+      - je veux toute la recette
+      - je veux bien la recette complète
+      - en entier s'il te plaît
+      - donne-moi la recette en entier
+      - affiche la recette complète
+      - dis-moi tout d'un coup
 
   - intent: start_step_by_step
     examples: |
@@ -534,6 +589,15 @@ nlu:
       - guide-moi étape par étape
       - une étape à la fois
       - faisons-le étape par étape
+      - petit à petit
+      - petit a petit
+      - je préfère étape par étape
+      - je veux y aller étape par étape
+      - commençons étape par étape
+      - pas à pas
+      - mode pas à pas
+      - on y va étape par étape
+      - un pas après l'autre
 
   - intent: next_step
     examples: |
@@ -543,6 +607,11 @@ nlu:
       - vas-y
       - c'est fait
       - ok suivant
+      - ensuite
+      - on continue
+      - prochaine étape
+      - suivant s'il te plaît
+      - d'accord, la suite
 
   - intent: repeat_step
     examples: |
@@ -551,6 +620,11 @@ nlu:
       - peux-tu répéter
       - redis l'étape
       - encore s'il te plaît
+      - je n'ai pas compris l'étape
+      - je n'ai pas bien entendu l'étape
+      - tu peux répéter l'étape ?
+      - répète la dernière étape
+      - redis-moi ça
 
   - intent: pause_recipe
     examples: |
@@ -558,6 +632,9 @@ nlu:
       - attends
       - un moment
       - arrête un instant
+      - stop
+      - attends deux minutes
+      - mets en pause
 
   - intent: resume_recipe
     examples: |
@@ -566,6 +643,14 @@ nlu:
       - je suis de retour
       - continuons
 
+  - intent: slow_down
+    examples: |
+      - plus lentement
+      - parle plus lentement
+      - peux-tu parler plus lentement
+      - ralentis
+      - moins vite
+
   - intent: ask_definition
     examples: |
       - qu'est-ce que "dorer" veut dire
@@ -573,3 +658,7 @@ nlu:
       - comment savoir si c'est cuit
       - qu'est-ce que "revenir"
       - comment émincer un oignon
+      - ça veut dire quoi "blanchir" ?
+      - c'est quoi "incorporer" ?
+      - comment je sais si c'est bien doré ?
+      - comment faire pour émincer ?

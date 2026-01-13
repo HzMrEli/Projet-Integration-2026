@@ -10,6 +10,9 @@ intents:
   - affirm
   - deny
 
+  # Emitted by the NLU FallbackClassifier when confidence is low
+  - nlu_fallback
+
   - start_fridge_mode
   - start_recipe_by_name
 
@@ -84,10 +87,6 @@ slots:
     type: text
     influence_conversation: false
 
-  speech_rate:
-    type: text
-    influence_conversation: false
-    initial_value: "normal"
 
   # --- Slots techniques (TTS / UI) ---
   tts_text:
@@ -159,5 +158,6 @@ actions:
   - action_generate_recipe_from_ingredients
   - action_generate_recipe_from_name
   - action_tell_recipe_step
+  - action_tell_full_recipe
   - action_text_to_speech
   - action_ui_refresh_pronounce_phrase

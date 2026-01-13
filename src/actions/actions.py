@@ -17,6 +17,7 @@ from __future__ import annotations
 from .recipe_actions import (
     ActionGenerateRecipeFromIngredients,
     ActionGenerateRecipeFromName,
+    ActionTellFullRecipe,
     ActionTellRecipeStep,
 )
 from .tts_actions import ActionTextToSpeech
@@ -24,6 +25,7 @@ from .tts_actions import ActionTextToSpeech
 __all__ = [
     "ActionGenerateRecipeFromIngredients",
     "ActionGenerateRecipeFromName",
+    "ActionTellFullRecipe",
     "ActionTellRecipeStep",
     "ActionTextToSpeech",
 ]
