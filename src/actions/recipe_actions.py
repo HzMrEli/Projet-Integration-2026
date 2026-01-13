@@ -178,13 +178,13 @@ class ActionTellRecipeStep(Action):
     def name(self) -> Text:
         return "action_tell_recipe_step"
 
-    def _extract_steps(self, tracker: Tracker) -> List[Dict[str, Any]]:
+    def _extract_steps(self, tracker: Tracker) -> List[Any]:
         steps_slot = tracker.get_slot("recipe_steps")
         if isinstance(steps_slot, list) and steps_slot:
             return steps_slot
 
         # Fallbacks: allow storing the full recipe card JSON in a slot.
-        for slot_name in ("recipe_card", "recipe_json", "last_recipe", "recipe"):
+        for slot_name in ("recipe_card", "recipe_json"):
             raw = tracker.get_slot(slot_name)
             if raw is None:
                 continue
@@ -200,7 +200,7 @@ class ActionTellRecipeStep(Action):
                 continue
 
             recipe = data.get("recipe") if isinstance(data, dict) else None
-            steps = recipe.get("steps") if isinstance(recipe, dict) else None
+            steps = recipe.get("instructions") if isinstance(recipe, dict) else None
             if isinstance(steps, list) and steps:
                 return steps
 
@@ -252,10 +252,15 @@ class ActionTellRecipeStep(Action):
                 text="C'est terminé : tu as déjà fait toutes les étapes.")
             return [SlotSet("step_index", float(len(steps)))]
 
-        step = steps[idx] if isinstance(steps[idx], dict) else {}
-        step_number = step.get("index")
-        instruction = step.get("instruction")
-        timer_min = step.get("timer_min")
+        step_raw = steps[idx]
+        step_number: int | None = None
+        instruction: str | None = None
+        timer_min: Any = None
+
+        # Format attendu: List[str]
+        if isinstance(step_raw, str):
+            instruction = step_raw
+            step_number = idx
 
         if not isinstance(instruction, str) or not instruction.strip():
             dispatcher.utter_message(
