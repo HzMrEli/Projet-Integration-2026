@@ -22,3 +22,4 @@ src/tts_outputs/
 **/src/tts_outputs/
 start_rasa_with_api.ps1
 start_rasa_with_api.ps1
+tools/

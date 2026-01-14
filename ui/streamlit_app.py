@@ -6,6 +6,7 @@ import io
 import os
 import base64
 import uuid
+from pathlib import Path
 from typing import Any, Dict, List, Optional, cast
 
 import requests
@@ -124,6 +125,39 @@ def _render_bot_message(msg: Dict[str, Any]) -> None:
             st.json(custom)
 
 
+def _guess_audio_mime_type(path: Path) -> str:
+    """Devine le mime type audio à partir de l'extension de fichier."""
+    suffix = path.suffix.lower().lstrip(".")
+    if suffix in {"mp3", "mpeg"}:
+        return "audio/mpeg"
+    if suffix == "wav":
+        return "audio/wav"
+    if suffix == "ogg":
+        return "audio/ogg"
+    if suffix == "webm":
+        return "audio/webm"
+    return "audio/wav"
+
+
+def _render_local_audio_file(path: Path, autoplay: bool) -> None:
+    """Affiche un lecteur audio Streamlit pour un fichier local."""
+    try:
+        audio_bytes = path.read_bytes()
+    except Exception:
+        return
+
+    audio_b64 = base64.b64encode(audio_bytes).decode("utf-8")
+    mime_type = _guess_audio_mime_type(path)
+    autoplay_attr = "autoplay" if autoplay else ""
+    audio_html = f"""
+        <audio controls {autoplay_attr} style="width: 100%;">
+        <source src="data:{mime_type};base64,{audio_b64}" type="{mime_type}">
+        Your browser does not support the audio element.
+        </audio>
+    """
+    st.markdown(audio_html, unsafe_allow_html=True)
+
+
 def _transcribe_with_openai(audio_bytes: bytes, filename: str, mime_type: str) -> str:
     try:
         import openai
@@ -189,6 +223,25 @@ def main() -> None:
         st.session_state["last_slots"] = {}
     if "last_audio_hash" not in st.session_state:
         st.session_state["last_audio_hash"] = None
+    if "welcome_audio_played" not in st.session_state:
+        st.session_state["welcome_audio_played"] = False
+
+    # Message de bienvenue (UI) au lancement.
+    # On le ré-affiche aussi après un Reset (messages vidés).
+    if not st.session_state["messages"]:
+        repo_root = Path(__file__).resolve().parents[1]
+        welcome_wav = repo_root / "ui" / "welcome.wav"
+        st.session_state["messages"].append(
+            {
+                "role": "assistant",
+                "content": (
+                    "Bonjour ! Je suis votre assistant culinaire.\n\n"
+                    "Je peux proposer des recettes complètes ou étape par étape à partir de vos ingrédients, ou à partir d'un nom de recette.\n"
+                    "Dans la barre latérale, activer votre micro et maintenez ESPACE pour parler (push-to-talk)."
+                ),
+                "audio_path": str(welcome_wav) if welcome_wav.exists() else None,
+            }
+        )
 
     # Display technical slots (useful for your UI refresh / TTS markers)
     slots = st.session_state.get("last_slots") or {}
@@ -211,6 +264,7 @@ def main() -> None:
             st.session_state["messages"] = []
             st.session_state["last_slots"] = {}
             st.session_state["last_audio_hash"] = None
+            st.session_state["welcome_audio_played"] = False
             st.session_state["ptt_nonce"] = int(st.session_state.get("ptt_nonce", 0)) + 1
             # New conversation to reset server-side context as well.
             st.session_state["active_sender_id"] = f"streamlit_{uuid.uuid4().hex[:8]}"
@@ -254,8 +308,16 @@ def main() -> None:
     for m in st.session_state["messages"]:
         role = m.get("role", "assistant")
         content = m.get("content", "")
+        audio_path = m.get("audio_path")
         with _chat_message(role):
             st.markdown(content)
+            if isinstance(audio_path, str) and audio_path.strip():
+                path = Path(audio_path)
+                if path.exists():
+                    autoplay = not bool(st.session_state.get("welcome_audio_played"))
+                    if autoplay:
+                        st.session_state["welcome_audio_played"] = True
+                    _render_local_audio_file(path, autoplay=autoplay)
 
     if not isinstance(ptt, dict):
         # Aucun audio reçu (composant pas encore utilisé / pas de permission / rerun)
