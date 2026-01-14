@@ -149,11 +149,32 @@ def _render_local_audio_file(path: Path, autoplay: bool) -> None:
     audio_b64 = base64.b64encode(audio_bytes).decode("utf-8")
     mime_type = _guess_audio_mime_type(path)
     autoplay_attr = "autoplay" if autoplay else ""
+
+    # Generate stable ID based on path to prevent re-mounting on reruns
+    element_id = f"audio_{hashlib.md5(str(path).encode()).hexdigest()}"
+
+    # JavaScript fallback to force play if attribute fails (browser policy)
+    js_code = ""
+    if autoplay:
+        js_code = f"""
+<script>
+    (function() {{
+        var audio = document.getElementById("{element_id}");
+        if (audio) {{
+            audio.play().catch(function(e) {{ 
+                console.warn("Autoplay blocked/failed:", e); 
+            }});
+        }}
+    }})();
+</script>
+"""
+
     audio_html = f"""
-        <audio controls {autoplay_attr} style="width: 100%;">
+        <audio id="{element_id}" controls {autoplay_attr} style="width: 100%;">
         <source src="data:{mime_type};base64,{audio_b64}" type="{mime_type}">
         Your browser does not support the audio element.
         </audio>
+        {js_code}
     """
     st.markdown(audio_html, unsafe_allow_html=True)
 
@@ -223,8 +244,8 @@ def main() -> None:
         st.session_state["last_slots"] = {}
     if "last_audio_hash" not in st.session_state:
         st.session_state["last_audio_hash"] = None
-    if "welcome_audio_played" not in st.session_state:
-        st.session_state["welcome_audio_played"] = False
+    if "welcome_render_count" not in st.session_state:
+        st.session_state["welcome_render_count"] = 0
 
     # Message de bienvenue (UI) au lancement.
     # On le ré-affiche aussi après un Reset (messages vidés).
@@ -264,7 +285,7 @@ def main() -> None:
             st.session_state["messages"] = []
             st.session_state["last_slots"] = {}
             st.session_state["last_audio_hash"] = None
-            st.session_state["welcome_audio_played"] = False
+            st.session_state["welcome_render_count"] = 0
             st.session_state["ptt_nonce"] = int(st.session_state.get("ptt_nonce", 0)) + 1
             # New conversation to reset server-side context as well.
             st.session_state["active_sender_id"] = f"streamlit_{uuid.uuid4().hex[:8]}"
@@ -314,9 +335,17 @@ def main() -> None:
             if isinstance(audio_path, str) and audio_path.strip():
                 path = Path(audio_path)
                 if path.exists():
-                    autoplay = not bool(st.session_state.get("welcome_audio_played"))
-                    if autoplay:
-                        st.session_state["welcome_audio_played"] = True
+                    # Autoplay logic:
+                    # 1. Stop autoplay if user has sent messages (len > 1).
+                    # 2. Otherwise/Initially, keep autoplay ON for a few renders (threshold=5)
+                    #    to survive initial Streamlit reruns/flicker.
+                    if len(st.session_state["messages"]) > 1:
+                        autoplay = False
+                    else:
+                        cnt = st.session_state.get("welcome_render_count", 0)
+                        autoplay = (cnt < 5)
+                        st.session_state["welcome_render_count"] = cnt + 1
+                    
                     _render_local_audio_file(path, autoplay=autoplay)
 
     if not isinstance(ptt, dict):
