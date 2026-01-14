@@ -1,0 +1,10 @@
+[
+  {
+    "text": "vas-y",
+    "intent": "next_step",
+    "intent_prediction": {
+      "name": "affirm",
+      "confidence": 0.5293788909912109
+    }
+  }
+]
