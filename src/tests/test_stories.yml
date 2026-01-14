@@ -1,0 +1,170 @@
+version: "2.0"
+
+stories:
+
+  - story: TEST 01 - frigo -> ingredients -> generation recette 
+    steps:
+      - intent: start_fridge_mode
+      - action: utter_ask_ingredients_collect
+      - action: action_text_to_speech
+      - intent: add_ingredient
+      - action: action_generate_recipe_from_ingredients
+      - action: utter_recipe_ingredients
+      - action: action_text_to_speech
+
+  - story: TEST 02 - frigo -> generation -> validation -> step_by_step 
+    steps:
+      - intent: start_fridge_mode
+      - action: utter_ask_ingredients_collect
+      - action: action_text_to_speech
+      - intent: add_ingredient
+      - action: action_generate_recipe_from_ingredients
+      - action: utter_recipe_ingredients
+      - action: action_text_to_speech
+      - intent: affirm
+      - action: utter_ask_full_or_step
+      - action: action_text_to_speech
+      - intent: start_step_by_step
+      - action: utter_ask_ready_to_start
+      - action: action_text_to_speech
+      - intent: affirm
+      - action: action_tell_recipe_step
+      - action: action_text_to_speech
+      - intent: next_step
+      - action: action_tell_recipe_step
+      - action: action_text_to_speech
+
+  - story: TEST 03 - ingredients direct -> generation recette 
+    steps:
+      - intent: add_ingredient
+      - action: action_generate_recipe_from_ingredients
+      - action: utter_recipe_ingredients
+      - action: action_text_to_speech
+      - intent: affirm
+      - action: utter_ask_full_or_step
+      - action: action_text_to_speech
+
+  - story: TEST 04 - recette refusee -> reproposer -> puis step_by_step 
+    steps:
+      - intent: start_fridge_mode
+      - action: utter_ask_ingredients_collect
+      - action: action_text_to_speech
+      - intent: add_ingredient
+      - action: action_generate_recipe_from_ingredients
+      - action: utter_recipe_ingredients
+      - action: action_text_to_speech
+      - intent: deny
+      - action: utter_propose_another_recipe
+      - action: action_text_to_speech
+      - action: action_generate_recipe_from_ingredients
+      - action: utter_recipe_ingredients
+      - action: action_text_to_speech
+      - intent: affirm
+      - action: utter_ask_full_or_step
+      - action: action_text_to_speech
+      - intent: start_step_by_step
+      - action: utter_ask_ready_to_start
+      - action: action_text_to_speech
+      - intent: affirm
+      - action: action_tell_recipe_step
+      - action: action_text_to_speech
+
+  - story: TEST 05 - option recette -> step_by_step 
+    steps:
+      - intent: add_ingredient
+      - action: action_generate_recipe_from_ingredients
+      - action: utter_recipe_ingredients
+      - action: action_text_to_speech
+      - intent: choose_recipe
+      - action: utter_ask_full_or_step
+      - action: action_text_to_speech
+      - intent: start_step_by_step
+      - action: utter_ask_ready_to_start
+      - action: action_text_to_speech
+      - intent: affirm
+      - action: action_tell_recipe_step
+      - action: action_text_to_speech
+
+  - story: TEST 06 - step_by_step -> pas pret -> pret 
+    steps:
+      - intent: start_step_by_step
+      - action: utter_ask_ready_to_start
+      - action: action_text_to_speech
+      - intent: deny
+      - action: utter_waiting_ready
+      - action: action_text_to_speech
+      - intent: affirm
+      - action: action_tell_recipe_step
+      - action: action_text_to_speech
+      - intent: next_step
+      - action: action_tell_recipe_step
+      - action: action_text_to_speech
+
+  - story: TEST 07 - step_by_step -> repeat -> next 
+    steps:
+      - intent: start_step_by_step
+      - action: utter_ask_ready_to_start
+      - action: action_text_to_speech
+      - intent: affirm
+      - action: action_tell_recipe_step
+      - action: action_text_to_speech
+      - intent: repeat_step
+      - action: action_tell_recipe_step
+      - action: action_text_to_speech
+      - intent: next_step
+      - action: action_tell_recipe_step
+      - action: action_text_to_speech
+
+  - story: TEST 08 - pause/reprise durant guidage 
+      - intent: start_step_by_step
+      - action: utter_ask_ready_to_start
+      - action: action_text_to_speech
+      - intent: affirm
+      - action: action_tell_recipe_step
+      - action: action_text_to_speech
+      - intent: pause_recipe
+      - action: utter_paused
+      - action: action_text_to_speech
+      - intent: resume_recipe
+      - action: utter_resumed
+      - action: action_text_to_speech
+      - intent: next_step
+      - action: action_tell_recipe_step
+      - action: action_text_to_speech
+
+  - story: TEST 09 - recette par nom -> generation details
+    steps:
+      - intent: start_recipe_by_name
+      - action: action_generate_recipe_from_name
+      - action: utter_recipe_found_details
+      - action: action_text_to_speech
+
+  - story: TEST 10 - recette par nom -> valide -> step_by_step 
+    steps:
+      - intent: start_recipe_by_name
+      - action: action_generate_recipe_from_name
+      - action: utter_recipe_found_details
+      - action: action_text_to_speech
+      - intent: affirm
+      - action: utter_ask_full_or_step
+      - action: action_text_to_speech
+      - intent: start_step_by_step
+      - action: utter_ask_ready_to_start
+      - action: action_text_to_speech
+      - intent: affirm
+      - action: action_tell_recipe_step
+      - action: action_text_to_speech
+
+  - story: TEST 11 - recette par nom refusee -> demander autre nom -> reproposer 
+    steps:
+      - intent: start_recipe_by_name
+      - action: action_generate_recipe_from_name
+      - action: utter_recipe_found_details
+      - action: action_text_to_speech
+      - intent: deny
+      - action: utter_ask_other_recipe_name
+      - action: action_text_to_speech
+      - intent: start_recipe_by_name
+      - action: action_generate_recipe_from_name
+      - action: utter_recipe_found_details
+      - action: action_text_to_speech
