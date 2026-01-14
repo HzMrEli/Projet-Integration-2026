@@ -1,7 +1,6 @@
 version: "2.0"
 
 rules:
-
   # --------------------------------------------------------------------------
   # After custom actions, always present the generated recipe
   # --------------------------------------------------------------------------
@@ -119,18 +118,6 @@ rules:
       - action: action_tell_recipe_step
       - action: action_text_to_speech
 
-  - rule: Pause
-    steps:
-      - intent: pause_recipe
-      - action: utter_paused
-      - action: action_text_to_speech
-
-  - rule: Reprise
-    steps:
-      - intent: resume_recipe
-      - action: utter_resumed
-      - action: action_text_to_speech
-
   - rule: Demande de définition
     steps:
       - intent: ask_definition
@@ -145,7 +132,6 @@ rules:
       - intent: nlu_fallback
       - action: utter_fallback
       - action: action_text_to_speech
-
 #   - rule: Confirm ingredients after adding ingredient
 #     steps:
 #       - intent: add_ingredient

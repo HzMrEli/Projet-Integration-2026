@@ -40,6 +40,14 @@ nlu:
       - vas-y
       - oui merci
       - bien sûr
+      - je suis prêt
+      - je suis prête
+      - c'est parti
+      - on est prêt
+      - on est prête
+      - quand tu veux
+      - go
+      - allons-y
 
   - intent: deny
     examples: |
@@ -52,6 +60,7 @@ nlu:
       - pas du tout
       - je préfère autre chose
       - ça ne me va pas
+      - je n'aime pas ça
 
   - intent: start_fridge_mode
     examples: |
@@ -695,31 +704,6 @@ nlu:
       - tu peux répéter l'étape ?
       - répète la dernière étape
       - redis-moi ça
-
-  - intent: pause_recipe
-    examples: |
-      - pause
-      - attends
-      - un moment
-      - arrête un instant
-      - stop
-      - attends deux minutes
-      - mets en pause
-
-  - intent: resume_recipe
-    examples: |
-      - reprends
-      - continue maintenant
-      - je suis de retour
-      - continuons
-
-  - intent: slow_down
-    examples: |
-      - plus lentement
-      - parle plus lentement
-      - peux-tu parler plus lentement
-      - ralentis
-      - moins vite
 
   - intent: ask_definition
     examples: |

@@ -25,9 +25,6 @@ intents:
 
   - next_step
   - repeat_step
-  - pause_recipe
-  - resume_recipe
-  - slow_down
   - ask_definition
 
 entities:
