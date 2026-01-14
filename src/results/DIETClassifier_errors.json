@@ -1,235 +1,56 @@
 [
   {
-    "text": "des tomates et des oignons",
+    "text": "recette de lasagnes",
     "entities": [
       {
-        "start": 4,
-        "end": 11,
-        "value": "tomates",
-        "entity": "liste_ingredients"
-      },
-      {
-        "start": 19,
-        "end": 26,
-        "value": "oignons",
-        "entity": "liste_ingredients"
+        "start": 11,
+        "end": 19,
+        "value": "lasagnes",
+        "entity": "nom_recette"
       }
     ],
     "predicted_entities": []
   },
   {
-    "text": "je dispose de tomates",
+    "text": "recette de lasagnes pour 6 personnes",
     "entities": [
       {
-        "start": 14,
-        "end": 21,
-        "value": "tomates",
-        "entity": "liste_ingredients"
-      }
-    ],
-    "predicted_entities": []
-  },
-  {
-    "text": "j'ai des tomates",
-    "entities": [
-      {
-        "start": 9,
-        "end": 16,
-        "value": "tomates",
-        "entity": "liste_ingredients"
-      }
-    ],
-    "predicted_entities": []
-  },
-  {
-    "text": "j'ai des oignons",
-    "entities": [
-      {
-        "start": 9,
-        "end": 16,
-        "value": "oignons",
-        "entity": "liste_ingredients"
-      }
-    ],
-    "predicted_entities": []
-  },
-  {
-    "text": "j'ai tomates + oignons + ail",
-    "entities": [
-      {
-        "start": 5,
-        "end": 12,
-        "value": "tomates",
-        "entity": "liste_ingredients"
-      },
-      {
-        "start": 15,
-        "end": 22,
-        "value": "oignons",
-        "entity": "liste_ingredients"
+        "start": 11,
+        "end": 19,
+        "value": "lasagnes",
+        "entity": "nom_recette"
       },
       {
         "start": 25,
-        "end": 28,
-        "value": "ail",
-        "entity": "liste_ingredients"
-      }
-    ],
-    "predicted_entities": [
-      {
-        "entity": "liste_ingredients",
-        "start": 25,
-        "end": 28,
-        "confidence_entity": 0.99398273229599,
-        "value": "ail",
-        "extractor": "DIETClassifier"
-      }
-    ]
-  },
-  {
-    "text": "il me reste des tomates et une salade",
-    "entities": [
-      {
-        "start": 16,
-        "end": 23,
-        "value": "tomates",
-        "entity": "liste_ingredients"
-      },
-      {
-        "start": 31,
-        "end": 37,
-        "value": "salade",
-        "entity": "liste_ingredients"
-      }
-    ],
-    "predicted_entities": [
-      {
-        "entity": "liste_ingredients",
-        "start": 31,
-        "end": 37,
-        "confidence_entity": 0.9985931515693665,
-        "value": "salade",
-        "extractor": "DIETClassifier"
-      }
-    ]
-  },
-  {
-    "text": "j'ai des tomates et des oignons, plutôt niveau intermédiaire",
-    "entities": [
-      {
-        "start": 9,
-        "end": 16,
-        "value": "tomates",
-        "entity": "liste_ingredients"
-      },
-      {
-        "start": 24,
-        "end": 31,
-        "value": "oignons",
-        "entity": "liste_ingredients"
-      },
-      {
-        "start": 47,
-        "end": 60,
-        "value": "intermédiaire",
-        "entity": "difficulte"
-      }
-    ],
-    "predicted_entities": [
-      {
-        "entity": "difficulte",
-        "start": 47,
-        "end": 60,
-        "confidence_entity": 0.99847811460495,
-        "value": "intermédiaire",
-        "extractor": "DIETClassifier"
-      }
-    ]
-  },
-  {
-    "text": "j'ai du poulet des tomates et de la salade en moins de 15 minutes",
-    "entities": [
-      {
-        "start": 8,
-        "end": 14,
-        "value": "poulet",
-        "entity": "liste_ingredients"
-      },
-      {
-        "start": 19,
         "end": 26,
-        "value": "tomates",
-        "entity": "liste_ingredients"
-      },
-      {
-        "start": 36,
-        "end": 42,
-        "value": "salade",
-        "entity": "liste_ingredients"
-      },
-      {
-        "start": 55,
-        "end": 57,
-        "value": "15",
-        "entity": "temps_max"
+        "value": "6",
+        "entity": "nb_personnes"
       }
     ],
     "predicted_entities": [
       {
-        "entity": "liste_ingredients",
-        "start": 8,
-        "end": 14,
-        "confidence_entity": 0.9966498017311096,
-        "value": "poulet",
-        "extractor": "DIETClassifier"
-      },
-      {
-        "entity": "liste_ingredients",
-        "start": 36,
-        "end": 42,
-        "confidence_entity": 0.9988094568252563,
-        "value": "salade",
-        "extractor": "DIETClassifier"
-      },
-      {
-        "entity": "temps_max",
-        "start": 55,
-        "end": 57,
-        "confidence_entity": 0.9957786798477173,
-        "value": "15",
+        "entity": "nb_personnes",
+        "start": 25,
+        "end": 26,
+        "confidence_entity": 0.9982216954231262,
+        "value": "6",
         "extractor": "DIETClassifier"
       }
     ]
   },
   {
     "text": "I have eggs",
-    "entities": [
+    "entities": [],
+    "predicted_entities": [
       {
+        "entity": "liste_ingredients",
         "start": 7,
         "end": 11,
+        "confidence_entity": 0.9888188242912292,
         "value": "eggs",
-        "entity": "liste_ingredients"
+        "extractor": "DIETClassifier"
       }
-    ],
-    "predicted_entities": []
-  },
-  {
-    "text": "tomatoes and onions",
-    "entities": [
-      {
-        "start": 0,
-        "end": 8,
-        "value": "tomatoes",
-        "entity": "liste_ingredients"
-      },
-      {
-        "start": 13,
-        "end": 19,
-        "value": "onions",
-        "entity": "liste_ingredients"
-      }
-    ],
-    "predicted_entities": []
+    ]
   },
   {
     "text": "je veux faire une carbonara",
@@ -239,7 +60,7 @@
         "entity": "nom_recette",
         "start": 18,
         "end": 27,
-        "confidence_entity": 0.7698992490768433,
+        "confidence_entity": 0.5911283493041992,
         "value": "carbonara",
         "extractor": "DIETClassifier"
       }
@@ -253,22 +74,8 @@
         "entity": "nom_recette",
         "start": 18,
         "end": 24,
-        "confidence_entity": 0.7983466386795044,
+        "confidence_entity": 0.6536760926246643,
         "value": "crêpes",
-        "extractor": "DIETClassifier"
-      }
-    ]
-  },
-  {
-    "text": "recette de lasagnes",
-    "entities": [],
-    "predicted_entities": [
-      {
-        "entity": "nom_recette",
-        "start": 11,
-        "end": 19,
-        "confidence_entity": 0.5343227982521057,
-        "value": "lasagnes",
         "extractor": "DIETClassifier"
       }
     ]
@@ -281,7 +88,7 @@
         "entity": "nom_recette",
         "start": 25,
         "end": 42,
-        "confidence_entity": 0.8857117891311646,
+        "confidence_entity": 0.6224825382232666,
         "value": "soupe à la tomate",
         "extractor": "DIETClassifier"
       }
@@ -295,35 +102,22 @@
         "entity": "liste_ingredients",
         "start": 9,
         "end": 13,
-        "confidence_entity": 0.8922609090805054,
+        "confidence_entity": 0.5037291646003723,
         "value": "œufs",
         "extractor": "DIETClassifier"
       }
     ]
   },
   {
-    "text": "j'ai des champignons et des oignons",
-    "entities": [
-      {
-        "start": 9,
-        "end": 20,
-        "value": "champignons",
-        "entity": "liste_ingredients"
-      },
-      {
-        "start": 28,
-        "end": 35,
-        "value": "oignons",
-        "entity": "liste_ingredients"
-      }
-    ],
+    "text": "j'ai des tomates et des oignons",
+    "entities": [],
     "predicted_entities": [
       {
         "entity": "liste_ingredients",
         "start": 9,
-        "end": 20,
-        "confidence_entity": 0.9700524210929871,
-        "value": "champignons",
+        "end": 16,
+        "confidence_entity": 0.7601805925369263,
+        "value": "tomates",
         "extractor": "DIETClassifier"
       }
     ]
