@@ -160,27 +160,6 @@ nlu:
       - redis l'étape
       - encore s'il te plaît
 
-  - intent: pause_recipe
-    examples: |
-      - pause
-      - attends
-      - un moment
-      - arrête un instant
-
-  - intent: resume_recipe
-    examples: |
-      - reprends
-      - continue maintenant
-      - je suis de retour
-      - continuons
-
-  - intent: slow_down
-    examples: |
-      - plus lentement
-      - parle plus lentement
-      - plus lentement s'il te plaît
-      - ralentis
-
   - intent: ask_definition
     examples: |
       - qu'est-ce que "dorer" veut dire

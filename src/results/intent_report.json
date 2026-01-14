@@ -1,16 +1,23 @@
 {
-  "add_ingredient": {
+  "greet": {
     "precision": 1.0,
     "recall": 1.0,
     "f1-score": 1.0,
-    "support": 213,
+    "support": 13,
     "confused_with": {}
   },
-  "pause_recipe": {
+  "start_fridge_mode": {
     "precision": 1.0,
     "recall": 1.0,
     "f1-score": 1.0,
-    "support": 7,
+    "support": 29,
+    "confused_with": {}
+  },
+  "choose_recipe": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 21,
     "confused_with": {}
   },
   "next_step": {
@@ -20,6 +27,27 @@
     "support": 16,
     "confused_with": {}
   },
+  "add_ingredient": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 213,
+    "confused_with": {}
+  },
+  "deny": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 14,
+    "confused_with": {}
+  },
+  "start_recipe_by_name": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 72,
+    "confused_with": {}
+  },
   "goodbye": {
     "precision": 1.0,
     "recall": 1.0,
@@ -27,18 +55,11 @@
     "support": 11,
     "confused_with": {}
   },
-  "repeat_step": {
+  "ask_definition": {
     "precision": 1.0,
     "recall": 1.0,
     "f1-score": 1.0,
-    "support": 15,
-    "confused_with": {}
-  },
-  "slow_down": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 8,
+    "support": 14,
     "confused_with": {}
   },
   "done_ingredients": {
@@ -57,11 +78,18 @@
       "next_step": 1
     }
   },
-  "start_recipe_by_name": {
+  "start_step_by_step": {
     "precision": 1.0,
     "recall": 1.0,
     "f1-score": 1.0,
-    "support": 72,
+    "support": 17,
+    "confused_with": {}
+  },
+  "repeat_step": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 15,
     "confused_with": {}
   },
   "ask_full_recipe": {
@@ -71,66 +99,17 @@
     "support": 15,
     "confused_with": {}
   },
-  "resume_recipe": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 8,
-    "confused_with": {}
-  },
-  "deny": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 14,
-    "confused_with": {}
-  },
-  "start_fridge_mode": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 29,
-    "confused_with": {}
-  },
-  "ask_definition": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 14,
-    "confused_with": {}
-  },
-  "greet": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 13,
-    "confused_with": {}
-  },
-  "start_step_by_step": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 17,
-    "confused_with": {}
-  },
-  "choose_recipe": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 21,
-    "confused_with": {}
-  },
-  "accuracy": 0.998062015503876,
+  "accuracy": 0.9979716024340771,
   "macro avg": {
-    "precision": 0.9965397923875433,
-    "recall": 0.9977375565610859,
-    "f1-score": 0.9970640662682184,
-    "support": 516
+    "precision": 0.9957983193277311,
+    "recall": 0.9972527472527473,
+    "f1-score": 0.9964349376114081,
+    "support": 493
   },
   "weighted avg": {
-    "precision": 0.9981760145918832,
-    "recall": 0.998062015503876,
-    "f1-score": 0.9980723790573311,
-    "support": 516
+    "precision": 0.998090919937955,
+    "recall": 0.9979716024340771,
+    "f1-score": 0.9979824494798841,
+    "support": 493
   }
 }

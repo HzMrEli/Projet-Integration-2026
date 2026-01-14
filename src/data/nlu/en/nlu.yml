@@ -153,27 +153,6 @@ nlu:
       - repeat the step
       - again please
 
-  - intent: pause_recipe
-    examples: |
-      - pause
-      - wait
-      - hold on
-      - stop for a moment
-
-  - intent: resume_recipe
-    examples: |
-      - resume
-      - continue now
-      - I'm back
-      - let's continue
-
-  - intent: slow_down
-    examples: |
-      - slower
-      - speak slower
-      - more slowly please
-      - slow down
-
   - intent: ask_definition
     examples: |
       - what does "brown" mean
