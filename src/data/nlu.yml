@@ -691,6 +691,12 @@ nlu:
       - prochaine étape
       - suivant s'il te plaît
       - d'accord, la suite
+      - quelle est l'étape d'après ?
+      - quelle est la prochaine étape ?
+      - on passe à l'étape suivante
+      - allons-y pour la suite
+      - continue la recette
+      - continue s'il te plaît
 
   - intent: repeat_step
     examples: |

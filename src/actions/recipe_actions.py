@@ -51,7 +51,7 @@ class ActionGenerateRecipeFromIngredients(Action):
         dump = json.dumps(data, ensure_ascii=False)
 
         recipe = data.get("recipe") if isinstance(data, dict) else None
-        steps = recipe.get("steps") if isinstance(recipe, dict) else None
+        steps = recipe.get("instructions") if isinstance(recipe, dict) else None
         if not isinstance(steps, list):
             steps = []
         # Construction de formatted_ingredients pour l'affichage
@@ -133,7 +133,7 @@ class ActionGenerateRecipeFromName(Action):
         dump = json.dumps(data, ensure_ascii=False)
         
         recipe = data.get("recipe") if isinstance(data, dict) else None
-        steps = recipe.get("steps") if isinstance(recipe, dict) else None
+        steps = recipe.get("instructions") if isinstance(recipe, dict) else None
         if not isinstance(steps, list):
             steps = []
 
@@ -225,13 +225,12 @@ class ActionTellRecipeStep(Action):
 
         steps = self._extract_steps(tracker)
         if not steps:
-            dispatcher.utter_message(
-                text=(
-                    "Je n'ai pas encore de recette en mémoire. "
-                    "Demande d'abord une recette, puis dis 'étape par étape'."
-                )
+            text = (
+                "Je n'ai pas encore de recette en mémoire. "
+                "Demande d'abord une recette, puis dis 'étape par étape'."
             )
-            return []
+            dispatcher.utter_message(text=text)
+            return [SlotSet("tts_text", text)]
 
         intent_name = ((tracker.latest_message or {}).get("intent") or {}).get("name")
         current_index = self._get_int_slot(tracker, "step_index", default=0)
@@ -242,14 +241,18 @@ class ActionTellRecipeStep(Action):
             last_text = tracker.get_slot("last_step_text")
             if isinstance(last_text, str) and last_text.strip():
                 dispatcher.utter_message(text=last_text)
-                return []
+                return [SlotSet("tts_text", last_text)]
             idx = max(current_index - 1, 0)
         else:
             idx = max(current_index, 0)
 
         if idx >= len(steps):
-            dispatcher.utter_message(text="C'est terminé : tu as déjà fait toutes les étapes.")
-            return [SlotSet("step_index", float(len(steps)))]
+            text = "C'est terminé : tu as déjà fait toutes les étapes."
+            dispatcher.utter_message(text=text)
+            return [
+                SlotSet("step_index", float(len(steps))),
+                SlotSet("tts_text", text)
+            ]
 
         step_raw = steps[idx]
         if isinstance(step_raw, str):
@@ -258,10 +261,12 @@ class ActionTellRecipeStep(Action):
             instruction = ""
 
         if not instruction:
-            dispatcher.utter_message(
-                text="Je n'arrive pas à lire cette étape. Dis 'suivant' pour passer à la prochaine."
-            )
-            return [SlotSet("step_index", float(idx + 1))]
+            text = "Je n'arrive pas à lire cette étape. Dis 'suivant' pour passer à la prochaine."
+            dispatcher.utter_message(text=text)
+            return [
+                SlotSet("step_index", float(idx + 1)),
+                SlotSet("tts_text", text)
+            ]
 
         text = f"Étape {idx + 1}: {instruction}"
         dispatcher.utter_message(text=text)
@@ -269,6 +274,7 @@ class ActionTellRecipeStep(Action):
         return [
             SlotSet("step_index", float(idx + 1)),
             SlotSet("last_step_text", text),
+            SlotSet("tts_text", text),
         ]
 
 

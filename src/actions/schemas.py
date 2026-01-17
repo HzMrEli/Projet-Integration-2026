@@ -47,22 +47,13 @@ RECIPE_SCHEMA: Dict[str, Any] = {
                             ],
                         },
                     },
-                    "steps": {
+                    "instructions": {
                         "type": "array",
                         "minItems": 1,
-                        "items": {
-                            "type": "object",
-                            "additionalProperties": False,
-                            "properties": {
-                                "index": {"type": "integer", "minimum": 1},
-                                "instruction": {"type": "string"},
-                                "timer_min": {"type": ["integer", "null"], "minimum": 0},
-                            },
-                            "required": ["index", "instruction", "timer_min"],
-                        },
+                        "items": {"type": "string"},
                     },
                 },
-                "required": ["name", "servings", "times", "ingredients", "steps"],
+                "required": ["name", "servings", "times", "ingredients", "instructions"],
             }
         },
         "required": ["recipe"],
