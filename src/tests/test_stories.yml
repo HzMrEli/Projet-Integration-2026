@@ -1,7 +1,8 @@
 version: "2.0"
 
 stories:
-  - story: frigo -> ingrédients -> génération recette
+
+  - story: TEST 01 - frigo -> ingredients -> generation 
     steps:
       - intent: greet
       - action: utter_greet
@@ -14,14 +15,36 @@ stories:
       - action: utter_recipe_ingredients
       - action: action_text_to_speech
 
-  - story: utilisateur donne directement des ingrédients -> génération recette
+  - story: TEST 02 - ingredients direct -> generation
     steps:
       - intent: add_ingredient
       - action: action_generate_recipe_from_ingredients
       - action: utter_recipe_ingredients
       - action: action_text_to_speech
 
-  - story: ingrédients -> recette ok -> étape par étape -> prêt -> étapes 1 par 1
+  - story: TEST 03 - frigo -> recette ok -> step_by_step
+    steps:
+      - intent: start_fridge_mode
+      - action: utter_ask_ingredients_collect
+      - action: action_text_to_speech
+      - intent: add_ingredient
+      - action: action_generate_recipe_from_ingredients
+      - action: utter_recipe_ingredients
+      - action: action_text_to_speech
+      - intent: affirm
+      - action: utter_ask_full_or_step
+      - action: action_text_to_speech
+      - intent: start_step_by_step
+      - action: utter_ask_ready_to_start
+      - action: action_text_to_speech
+      - intent: affirm
+      - action: action_tell_recipe_step
+      - action: action_text_to_speech
+      - intent: next_step
+      - action: action_tell_recipe_step
+      - action: action_text_to_speech
+
+  - story: TEST 04 - frigo -> 2 ingredients -> step_by_step -> next x2
     steps:
       - intent: start_fridge_mode
       - action: utter_ask_ingredients_collect
@@ -50,7 +73,7 @@ stories:
       - action: action_tell_recipe_step
       - action: action_text_to_speech
 
-  - story: ingrédients -> recette refusée -> autre recette -> validation
+  - story: TEST 05 - recette refusee -> autre -> validation 
     steps:
       - intent: start_fridge_mode
       - action: utter_ask_ingredients_collect
@@ -69,7 +92,7 @@ stories:
       - action: utter_ask_full_or_step
       - action: action_text_to_speech
 
-  - story: ingrédients -> recette choisie via option -> étape par étape
+  - story: TEST 06 - option -> step_by_step (variante)
     steps:
       - intent: add_ingredient
       - action: action_generate_recipe_from_ingredients
@@ -85,7 +108,7 @@ stories:
       - action: action_tell_recipe_step
       - action: action_text_to_speech
 
-  - story: étape par étape -> pas prêt -> attendre -> prêt -> première étape
+  - story: TEST 07 - step_by_step -> pas prêt -> prêt -> première étape 
     steps:
       - intent: start_step_by_step
       - action: utter_ask_ready_to_start
@@ -97,7 +120,7 @@ stories:
       - action: action_tell_recipe_step
       - action: action_text_to_speech
 
-  - story: étape par étape -> répéter -> suivant
+  - story: TEST 08 - step_by_step -> repeat -> next 
     steps:
       - intent: start_step_by_step
       - action: utter_ask_ready_to_start
@@ -112,7 +135,7 @@ stories:
       - action: action_tell_recipe_step
       - action: action_text_to_speech
 
-  - story: étape par étape -> pause -> reprise -> continuer
+  - story: TEST 09 - step_by_step -> next 
     steps:
       - intent: start_step_by_step
       - action: utter_ask_ready_to_start
@@ -124,7 +147,7 @@ stories:
       - action: action_tell_recipe_step
       - action: action_text_to_speech
 
-  - story: recette par nom -> génération recette
+  - story: TEST 10 - recette par nom -> generation
     steps:
       - intent: greet
       - action: utter_greet
@@ -134,7 +157,7 @@ stories:
       - action: utter_recipe_found_details
       - action: action_text_to_speech
 
-  - story: recette par nom -> valide -> étape par étape
+  - story: TEST 11 - recette par nom -> valide -> step_by_step 
     steps:
       - intent: start_recipe_by_name
       - action: action_generate_recipe_from_name
@@ -150,7 +173,7 @@ stories:
       - action: action_tell_recipe_step
       - action: action_text_to_speech
 
-  - story: recette par nom -> refusée -> demander autre nom -> reproposer
+  - story: TEST 12 - recette par nom refusee -> autre nom -> reproposer
     steps:
       - intent: start_recipe_by_name
       - action: action_generate_recipe_from_name
@@ -164,7 +187,7 @@ stories:
       - action: utter_recipe_found_details
       - action: action_text_to_speech
 
-  - story: guidage étape par étape
+  - story: TEST 13 - guidage step_by_step complet (next + repeat) 
     steps:
       - intent: start_step_by_step
       - action: utter_ask_ready_to_start

@@ -51,7 +51,7 @@ class ActionGenerateRecipeFromIngredients(Action):
         dump = json.dumps(data, ensure_ascii=False)
 
         recipe = data.get("recipe") if isinstance(data, dict) else None
-        steps = recipe.get("steps") if isinstance(recipe, dict) else None
+        steps = recipe.get("instructions") if isinstance(recipe, dict) else None
         if not isinstance(steps, list):
             steps = []
         # Construction de formatted_ingredients pour l'affichage
@@ -133,7 +133,7 @@ class ActionGenerateRecipeFromName(Action):
         dump = json.dumps(data, ensure_ascii=False)
         
         recipe = data.get("recipe") if isinstance(data, dict) else None
-        steps = recipe.get("steps") if isinstance(recipe, dict) else None
+        steps = recipe.get("instructions") if isinstance(recipe, dict) else None
         if not isinstance(steps, list):
             steps = []
 
@@ -225,15 +225,14 @@ class ActionTellRecipeStep(Action):
 
         steps = self._extract_steps(tracker)
         if not steps:
-            dispatcher.utter_message(
-                text="Je n'ai pas encore de recette en mémoire. Demande d'abord une recette, puis dis 'étape par étape'."
+            text = (
+                "Je n'ai pas encore de recette en mémoire. "
+                "Demande d'abord une recette, puis dis 'étape par étape'."
             )
-            return []
+            dispatcher.utter_message(text=text)
+            return [SlotSet("tts_text", text)]
 
-        intent_name = (
-            (tracker.latest_message or {}).get("intent") or {}
-        ).get("name")
-
+        intent_name = ((tracker.latest_message or {}).get("intent") or {}).get("name")
         current_index = self._get_int_slot(tracker, "step_index", default=0)
 
         if intent_name == "start_step_by_step":
@@ -242,48 +241,122 @@ class ActionTellRecipeStep(Action):
             last_text = tracker.get_slot("last_step_text")
             if isinstance(last_text, str) and last_text.strip():
                 dispatcher.utter_message(text=last_text)
-                return []
+                return [SlotSet("tts_text", last_text)]
             idx = max(current_index - 1, 0)
         else:
             idx = max(current_index, 0)
 
-        if idx > len(steps):
-            dispatcher.utter_message(
-                text="C'est terminé : tu as déjà fait toutes les étapes.")
-            return [SlotSet("step_index", float(len(steps)))]
+        if idx >= len(steps):
+            text = "C'est terminé : tu as déjà fait toutes les étapes."
+            dispatcher.utter_message(text=text)
+            return [
+                SlotSet("step_index", float(len(steps))),
+                SlotSet("tts_text", text)
+            ]
 
         step_raw = steps[idx]
-        step_number: int | None = None
-        instruction: str | None = None
-        timer_min: Any = None
-
-        # Format attendu: List[str]
         if isinstance(step_raw, str):
-            instruction = step_raw
-            step_number = idx
-
-        if not isinstance(instruction, str) or not instruction.strip():
-            dispatcher.utter_message(
-                text="Je n'arrive pas à lire cette étape. Dis 'suivant' pour passer à la prochaine.")
-            return [SlotSet("step_index", float(idx + 1))]
-
-        prefix = "Étape"
-        if isinstance(step_number, int):
-            text = f"{prefix} {step_number}: {instruction.strip()}"
+            instruction = step_raw.strip()
         else:
-            text = f"{prefix} {idx + 1}: {instruction.strip()}"
+            instruction = ""
 
-        try:
-            timer_int = int(timer_min) if timer_min is not None else None
-        except Exception:
-            timer_int = None
+        if not instruction:
+            text = "Je n'arrive pas à lire cette étape. Dis 'suivant' pour passer à la prochaine."
+            dispatcher.utter_message(text=text)
+            return [
+                SlotSet("step_index", float(idx + 1)),
+                SlotSet("tts_text", text)
+            ]
 
-        if timer_int is not None and timer_int > 0:
-            text = f"{text} (environ {timer_int} min)"
-
+        text = f"Étape {idx + 1}: {instruction}"
         dispatcher.utter_message(text=text)
 
         return [
             SlotSet("step_index", float(idx + 1)),
             SlotSet("last_step_text", text),
+            SlotSet("tts_text", text),
         ]
+
+
+class ActionTellFullRecipe(Action):
+    def name(self) -> Text:
+        return "action_tell_full_recipe"
+
+    def _load_recipe(self, tracker: Tracker) -> Dict[str, Any] | None:
+        raw = tracker.get_slot("recipe_card") or tracker.get_slot("recipe_json")
+        if raw is None:
+            return None
+        if isinstance(raw, dict):
+            data = raw
+        elif isinstance(raw, str):
+            try:
+                data = json.loads(raw)
+            except Exception:
+                return None
+        else:
+            return None
+
+        recipe = data.get("recipe") if isinstance(data, dict) else None
+        return recipe if isinstance(recipe, dict) else None
+
+    def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+
+        recipe = self._load_recipe(tracker)
+        if not recipe:
+            dispatcher.utter_message(
+                text="Je n'ai pas encore de recette en mémoire. Demande d'abord une recette, puis redis-moi ce que tu veux."
+            )
+            return []
+
+        name = recipe.get("name") or tracker.get_slot("nom_recette")
+        servings = recipe.get("servings")
+        times = recipe.get("times") if isinstance(recipe.get("times"), dict) else {}
+        total_min = times.get("total_min")
+
+        header_parts: List[str] = []
+        if isinstance(name, str) and name.strip():
+            header_parts.append(f"Recette : {name.strip()}")
+        if isinstance(servings, int) and servings > 0:
+            header_parts.append(f"pour {servings} personne(s)")
+        if isinstance(total_min, int) and total_min > 0:
+            header_parts.append(f"(temps total ~ {total_min} min)")
+
+        header = " ".join(header_parts) if header_parts else "Recette complète"
+
+        ingredients = recipe.get("ingredients")
+        ing_lines: List[str] = []
+        if isinstance(ingredients, list):
+            for ing in ingredients:
+                if not isinstance(ing, dict):
+                    continue
+                i_name = str(ing.get("name") or "").strip()
+                if not i_name:
+                    continue
+                qty = ing.get("quantity")
+                unit = ing.get("unit")
+                if qty is None:
+                    ing_lines.append(f"- {i_name}")
+                else:
+                    unit_str = f" {unit}" if isinstance(unit, str) and unit.strip() else ""
+                    ing_lines.append(f"- {qty}{unit_str} {i_name}".strip())
+
+        steps = recipe.get("instructions")
+        step_lines: List[str] = []
+        if isinstance(steps, list):
+            for idx, s in enumerate(steps, start=1):
+                if isinstance(s, str) and s.strip():
+                    step_lines.append(f"{idx}. {s.strip()}")
+
+        message_parts = [header]
+        if ing_lines:
+            message_parts.append("Ingrédients :\n" + "\n".join(ing_lines))
+        if step_lines:
+            message_parts.append("Étapes :\n" + "\n".join(step_lines))
+
+        dispatcher.utter_message(text="\n\n".join(message_parts))
+        return []

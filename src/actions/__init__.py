@@ -2,6 +2,7 @@
 from .actions import (
     ActionGenerateRecipeFromIngredients,
     ActionGenerateRecipeFromName,
+    ActionTellFullRecipe,
     ActionTellRecipeStep,
     ActionTextToSpeech,
 )
@@ -9,6 +10,7 @@ from .actions import (
 __all__ = [
     "ActionGenerateRecipeFromIngredients",
     "ActionGenerateRecipeFromName",
+    "ActionTellFullRecipe",
     "ActionTellRecipeStep",
     "ActionTextToSpeech",
 ]

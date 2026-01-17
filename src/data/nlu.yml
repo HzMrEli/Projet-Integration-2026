@@ -8,6 +8,11 @@ nlu:
       - salut
       - bon matin
       - bonsoir
+      - coucou
+      - hello
+      - salut à toi
+      - bonjour assistant
+      - yo
 
   - intent: goodbye
     examples: |
@@ -15,6 +20,9 @@ nlu:
       - à bientôt
       - à plus tard
       - bonne journée
+      - merci, au revoir
+      - on se reparle plus tard
+      - ciao
 
   - intent: affirm
     examples: |
@@ -24,6 +32,22 @@ nlu:
       - correct
       - ok
       - d'accord
+      - parfait
+      - ça me va
+      - oui.
+      - ok super
+      - ça marche
+      - vas-y
+      - oui merci
+      - bien sûr
+      - je suis prêt
+      - je suis prête
+      - c'est parti
+      - on est prêt
+      - on est prête
+      - quand tu veux
+      - go
+      - allons-y
 
   - intent: deny
     examples: |
@@ -31,6 +55,12 @@ nlu:
       - nan
       - pas vraiment
       - jamais
+      - non merci
+      - non.
+      - pas du tout
+      - je préfère autre chose
+      - ça ne me va pas
+      - je n'aime pas ça
 
   - intent: start_fridge_mode
     examples: |
@@ -39,6 +69,25 @@ nlu:
       - suggère-moi des recettes avec le frigo
       - utilise mes ingrédients du frigo
       - qu'est-ce que je peux faire maintenant
+      - j'ai des ingrédients, propose-moi une recette
+      - avec ce que j'ai sous la main, tu proposes quoi ?
+      - je veux une idée de plat avec mon frigo
+      - je veux une recette faisable avec ce que j'ai
+      - propose une recette en moins de [30](temps_max) minutes
+      - je veux cuisiner en moins de [20](temps_max) minutes
+      - j'ai besoin d'une recette rapide (max [15](temps_max) minutes)
+      - je veux un truc [rapide](temps_max)
+      - une recette [vite](temps_max) s'il te plaît
+      - je cuisine en mode [rapide](temps_max)
+      - j'ai pas le temps, une recette [express](temps_max)
+      - j'ai pas beaucoup de temps, un plat [rapide](temps_max)
+      - je suis pressé, fais-moi un truc [express](temps_max)
+      - je suis pressée, une idée [rapide](temps_max)
+      - une recette facile pour [2](nb_personnes) personnes
+      - une idée pour [4](nb_personnes) personnes
+      - une recette niveau [débutant](difficulte)
+      - un plat niveau [intermédiaire](difficulte)
+      - une recette plutôt [avancé](difficulte)
 
   - intent: start_recipe_by_name
     examples: |
@@ -95,6 +144,15 @@ nlu:
       - je veux faire des [gaufres](nom_recette)
       - recette de [madeleines](nom_recette)
       - je veux la recette des [financiers](nom_recette)
+      - je veux faire une [carbonara](nom_recette) pour [2](nb_personnes) personnes
+      - recette de [lasagnes](nom_recette) pour [6](nb_personnes) personnes
+      - je veux faire un [risotto aux champignons](nom_recette) en moins de [35](temps_max) minutes
+      - montre-moi la recette de [poulet au curry](nom_recette) en moins de [25](temps_max) minutes
+      - je veux une [omelette](nom_recette) [rapide](temps_max)
+      - une [carbonara](nom_recette) en mode [express](temps_max)
+      - je veux des [crêpes](nom_recette) [vite](temps_max)
+      - je veux une [omelette](nom_recette) niveau [débutant](difficulte)
+      - recette de [pad thaï](nom_recette) niveau [intermédiaire](difficulte)
 
   - intent: add_ingredient
     examples: |
@@ -235,6 +293,68 @@ nlu:
       - voici ce que j'ai : [poulet](liste_ingredients) / [riz](liste_ingredients) / [carottes](liste_ingredients) / [oignons](liste_ingredients)
       - dans mon frigo il reste du [saumon](liste_ingredients)
       - dans mon placard il reste du [quinoa](liste_ingredients)
+      - j'ai du [poulet](liste_ingredients), de la [salade](liste_ingredients) et des [tomates](liste_ingredients)
+      - j'ai du [poulet](liste_ingredients) de la [salade](liste_ingredients) des [tomates](liste_ingredients)
+      - dans mon frigo : du [poulet](liste_ingredients), de la [salade](liste_ingredients), des [tomates](liste_ingredients)
+      - j'ai aussi du [riz](liste_ingredients) et du [poulet](liste_ingredients)
+      - il me reste des [tomates](liste_ingredients) et une [salade](liste_ingredients)
+      - j'ai du [poulet](liste_ingredients) et du [riz](liste_ingredients) pour [2](nb_personnes) personnes
+      - j'ai du [thon](liste_ingredients) et des [pâtes](liste_ingredients), je veux un truc en moins de [20](temps_max) minutes
+      - j'ai des [œufs](liste_ingredients) et du [lait](liste_ingredients), recette niveau [débutant](difficulte)
+      - j'ai des [tomates](liste_ingredients) et des [oignons](liste_ingredients), plutôt niveau [intermédiaire](difficulte)
+      - j'ai du [poulet](liste_ingredients) des [tomates](liste_ingredients) et de la [salade](liste_ingredients) en moins de [15](temps_max) minutes
+
+  - synonym: "débutant"
+    examples: |
+      - facile
+      - débutante
+      - debutant
+      - debutante
+
+  - synonym: "intermédiaire"
+    examples: |
+      - moyen
+      - moyenne
+      - intermédiaire
+      - intermediaire
+
+  - synonym: "avancé"
+    examples: |
+      - difficile
+      - avancé
+      - avance
+      - expert
+      - confirmé
+
+  - lookup: difficulte
+    examples: |
+      - débutant
+      - intermédiaire
+      - avancé
+
+  - synonym: "15"
+    examples: |
+      - rapide
+      - rapidement
+      - vite
+      - express
+      - en express
+      - en vitesse
+      - pressé
+      - pressée
+      - j'ai pas le temps
+      - pas le temps
+
+  - intent: done_ingredients
+    examples: |
+      - c'est tout
+      - c'est bon
+      - j'ai fini
+      - j'ai tout dit
+      - je n'ai rien d'autre
+      - voilà
+      - c'est tout ce que j'ai
+      - on peut y aller
 
   - synonym: "œufs"
     examples: |
@@ -519,7 +639,14 @@ nlu:
       - la deuxième
       - la troisième
       - je choisis l'option 2
-      - faisons une carbonara
+      - je prends la 1
+      - je prends la 2
+      - je prends la 3
+      - je choisis la première option
+      - je choisis la deuxième option
+      - je choisis la troisième option
+      - l'option numéro 2
+      - la recette 2
 
   - intent: ask_full_recipe
     examples: |
@@ -527,6 +654,13 @@ nlu:
       - donne-moi toute la recette
       - liste toutes les étapes
       - montre tout d'un coup
+      - je veux la recette complète
+      - je veux toute la recette
+      - je veux bien la recette complète
+      - en entier s'il te plaît
+      - donne-moi la recette en entier
+      - affiche la recette complète
+      - dis-moi tout d'un coup
 
   - intent: start_step_by_step
     examples: |
@@ -534,6 +668,15 @@ nlu:
       - guide-moi étape par étape
       - une étape à la fois
       - faisons-le étape par étape
+      - petit à petit
+      - petit a petit
+      - je préfère étape par étape
+      - je veux y aller étape par étape
+      - commençons étape par étape
+      - pas à pas
+      - mode pas à pas
+      - on y va étape par étape
+      - un pas après l'autre
 
   - intent: next_step
     examples: |
@@ -543,6 +686,17 @@ nlu:
       - vas-y
       - c'est fait
       - ok suivant
+      - ensuite
+      - on continue
+      - prochaine étape
+      - suivant s'il te plaît
+      - d'accord, la suite
+      - quelle est l'étape d'après ?
+      - quelle est la prochaine étape ?
+      - on passe à l'étape suivante
+      - allons-y pour la suite
+      - continue la recette
+      - continue s'il te plaît
 
   - intent: repeat_step
     examples: |
@@ -551,20 +705,11 @@ nlu:
       - peux-tu répéter
       - redis l'étape
       - encore s'il te plaît
-
-  - intent: pause_recipe
-    examples: |
-      - pause
-      - attends
-      - un moment
-      - arrête un instant
-
-  - intent: resume_recipe
-    examples: |
-      - reprends
-      - continue maintenant
-      - je suis de retour
-      - continuons
+      - je n'ai pas compris l'étape
+      - je n'ai pas bien entendu l'étape
+      - tu peux répéter l'étape ?
+      - répète la dernière étape
+      - redis-moi ça
 
   - intent: ask_definition
     examples: |
@@ -573,3 +718,7 @@ nlu:
       - comment savoir si c'est cuit
       - qu'est-ce que "revenir"
       - comment émincer un oignon
+      - ça veut dire quoi "blanchir" ?
+      - c'est quoi "incorporer" ?
+      - comment je sais si c'est bien doré ?
+      - comment faire pour émincer ?

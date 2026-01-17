@@ -10,6 +10,9 @@ intents:
   - affirm
   - deny
 
+  # Emitted by the NLU FallbackClassifier when confidence is low
+  - nlu_fallback
+
   - start_fridge_mode
   - start_recipe_by_name
 
@@ -22,14 +25,14 @@ intents:
 
   - next_step
   - repeat_step
-  - pause_recipe
-  - resume_recipe
-  - slow_down
   - ask_definition
 
 entities:
   - liste_ingredients
   - nom_recette
+  - temps_max
+  - nb_personnes
+  - difficulte
 
 slots:
   # --- Slots attendus par src/actions/recipe_actions.py ---
@@ -84,10 +87,6 @@ slots:
     type: text
     influence_conversation: false
 
-  speech_rate:
-    type: text
-    influence_conversation: false
-    initial_value: "normal"
 
   # --- Slots techniques (TTS / UI) ---
   tts_text:
@@ -121,6 +120,9 @@ responses:
 
   utter_recipe_found_details:
     - text: "Voici la recette de {nom_recette}. Il vous faudra : {formatted_ingredients}. Est-ce que cela vous convient ?"
+
+  utter_ask_other_recipe_name:
+    - text: "D'accord. Quelle autre recette voulez-vous ? "
 
   utter_ask_full_or_step:
     - text: "Voulez-vous la recette complète, ou un guidage étape par étape ?"
@@ -159,5 +161,6 @@ actions:
   - action_generate_recipe_from_ingredients
   - action_generate_recipe_from_name
   - action_tell_recipe_step
+  - action_tell_full_recipe
   - action_text_to_speech
   - action_ui_refresh_pronounce_phrase

@@ -1,0 +1,55 @@
+{
+  "liste_ingredients": {
+    "precision": 0.9909365558912386,
+    "recall": 0.9969604863221885,
+    "f1-score": 0.9939393939393939,
+    "support": 329,
+    "confused_with": {}
+  },
+  "nb_personnes": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 5,
+    "confused_with": {}
+  },
+  "temps_max": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 17,
+    "confused_with": {}
+  },
+  "nom_recette": {
+    "precision": 0.9477611940298507,
+    "recall": 1.0,
+    "f1-score": 0.9731800766283525,
+    "support": 127,
+    "confused_with": {}
+  },
+  "difficulte": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 7,
+    "confused_with": {}
+  },
+  "micro avg": {
+    "precision": 0.979757085020243,
+    "recall": 0.9979381443298969,
+    "f1-score": 0.9887640449438202,
+    "support": 485
+  },
+  "macro avg": {
+    "precision": 0.9877395499842179,
+    "recall": 0.9993920972644377,
+    "f1-score": 0.9934238941135494,
+    "support": 485
+  },
+  "weighted avg": {
+    "precision": 0.9801727804742445,
+    "recall": 0.9979381443298969,
+    "f1-score": 0.9888658357481677,
+    "support": 485
+  }
+}

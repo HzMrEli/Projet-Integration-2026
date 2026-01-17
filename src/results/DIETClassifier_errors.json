@@ -1,0 +1,106 @@
+[
+  {
+    "text": "I have eggs",
+    "entities": [
+      {
+        "start": 7,
+        "end": 11,
+        "value": "eggs",
+        "entity": "liste_ingredients"
+      }
+    ],
+    "predicted_entities": []
+  },
+  {
+    "text": "je veux faire une carbonara",
+    "entities": [],
+    "predicted_entities": [
+      {
+        "entity": "nom_recette",
+        "start": 18,
+        "end": 27,
+        "confidence_entity": 0.6029949188232422,
+        "value": "carbonara",
+        "extractor": "DIETClassifier"
+      }
+    ]
+  },
+  {
+    "text": "je veux faire des crêpes",
+    "entities": [],
+    "predicted_entities": [
+      {
+        "entity": "nom_recette",
+        "start": 18,
+        "end": 24,
+        "confidence_entity": 0.7762100100517273,
+        "value": "crêpes",
+        "extractor": "DIETClassifier"
+      }
+    ]
+  },
+  {
+    "text": "recette de lasagnes",
+    "entities": [],
+    "predicted_entities": [
+      {
+        "entity": "nom_recette",
+        "start": 11,
+        "end": 19,
+        "confidence_entity": 0.8885130286216736,
+        "value": "lasagnes",
+        "extractor": "DIETClassifier"
+      }
+    ]
+  },
+  {
+    "text": "montre-moi la recette de soupe à la tomate",
+    "entities": [],
+    "predicted_entities": [
+      {
+        "entity": "nom_recette",
+        "start": 25,
+        "end": 42,
+        "confidence_entity": 0.6232925653457642,
+        "value": "soupe à la tomate",
+        "extractor": "DIETClassifier"
+      }
+    ]
+  },
+  {
+    "text": "j'ai des œufs",
+    "entities": [],
+    "predicted_entities": [
+      {
+        "entity": "liste_ingredients",
+        "start": 9,
+        "end": 13,
+        "confidence_entity": 0.6088874936103821,
+        "value": "œufs",
+        "extractor": "DIETClassifier"
+      }
+    ]
+  },
+  {
+    "text": "j'ai des tomates et des oignons",
+    "entities": [],
+    "predicted_entities": [
+      {
+        "entity": "liste_ingredients",
+        "start": 9,
+        "end": 16,
+        "confidence_entity": 0.7914637327194214,
+        "value": "tomates",
+        "extractor": "DIETClassifier"
+      },
+      {
+        "entity": "liste_ingredients",
+        "start": 24,
+        "end": 31,
+        "confidence_entity": 0.590768039226532,
+        "value": "oignons",
+        "extractor": "DIETClassifier"
+      }
+    ]
+  }
+]
