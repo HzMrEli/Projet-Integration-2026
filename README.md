@@ -137,9 +137,11 @@ cd ui
 streamlit run streamlit_app.py
 ```
 
-## Tests
+## Vidéos Démo
 
-TODO: Ajouter des instructions pour les tests 
+- [Démo 1 | Recette via liste d'ingrédients puis étape par étape ](https://drive.google.com/file/d/1Rizpji-4pOpLLC5KW2GICo2q1aue-K-C/view?usp=sharing)
+- [Démo 2 | Recette via nom puis recette complète](https://drive.google.com/file/d/1nJp-lU3Xh1GAVvDbu8ucDFQ3up_yBCgj/view?usp=sharing)
+
 
 ## Diagramme Conversationnel
 
